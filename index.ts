@@ -1,23 +1,25 @@
 import { config } from "dotenv";
 import * as Discord from "discord.js";
 import * as os from "os";
-
-const request = require("request");
+import { Faceit } from "./faceit";
 
 config();
-const token: string = process.env.DISCORD_TOKEN;
+
 const faceitToken: string = process.env.FACEIT_TOKEN;
-const client = new Discord.Client();
+const faceit = new Faceit(faceitToken);
+
+const discordToken: string = process.env.DISCORD_TOKEN;
+const discord = new Discord.Client();
 const sacredId: string = "524008179861028885";
 const prefix: string = "!";
 
-client.once("ready", () => {
+discord.once("ready", () => {
   console.log("Ready!");
-  const sacredChannel = client.channels.get(sacredId) as Discord.TextChannel;
+  const sacredChannel = discord.channels.get(sacredId) as Discord.TextChannel;
   sacredChannel.send(`bot has successfully started up hostname: ${os.hostname}`);
 });
 
-client.on("message", message => {
+discord.on("message", message => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   const args: string[] = message.content.slice(prefix.length).split(" ");
@@ -32,22 +34,20 @@ client.on("message", message => {
       return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
     }
     message.channel.send(`Command name: ${command}\nArguments: ${args}`);
+  } else if (command === "stats") {
+    return runStatsCommand(message, args);
   }
 });
 
-client.login(token);
+function runStatsCommand(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
+  if (args.length !== 2) {
+    return message.channel.send(`You didn't provide enough arguments: (game, name) are required`);
+  } else {
+    const [game, username] = args;
+    return faceit.getStats(game, username).then(stats => {
+      return message.channel.send(`We received ${JSON.stringify(stats.games, null, 2)}`);
+    });
+  }
+}
 
-// function runStatsCommand(args: string[]) {
-//   if (!args.length) {
-//       return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
-//   } else {
-//       const name = args[0]
-//       return message.channel.send("No stats for " + name + " just yet");
-//   }
-// }
-
-// const test = request.get("https://developers.faceit.com/docs/tools/data-api", {
-//   auth: {
-//     bearer: `${faceitToken}`
-//   }
-// });
+discord.login(discordToken);
