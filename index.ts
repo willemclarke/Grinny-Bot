@@ -2,8 +2,11 @@ import { config } from "dotenv";
 import * as Discord from "discord.js";
 import * as os from "os";
 
+const request = require("request");
+
 config();
 const token: string = process.env.DISCORD_TOKEN;
+const faceitToken: string = process.env.FACEIT_TOKEN;
 const client = new Discord.Client();
 const sacredId: string = "524008179861028885";
 const prefix: string = "!";
@@ -20,8 +23,10 @@ client.on("message", message => {
   const args: string[] = message.content.slice(prefix.length).split(" ");
   const command: string = args.shift().toLowerCase();
 
-  if (message.content === "!ping") {
+  if (command === "ping") {
     message.channel.send("Pong.");
+  } else if (command === "user-info") {
+    message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
   } else if (command === "args-info") {
     if (!args.length) {
       return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
@@ -31,3 +36,18 @@ client.on("message", message => {
 });
 
 client.login(token);
+
+// function runStatsCommand(args: string[]) {
+//   if (!args.length) {
+//       return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+//   } else {
+//       const name = args[0]
+//       return message.channel.send("No stats for " + name + " just yet");
+//   }
+// }
+
+// const test = request.get("https://developers.faceit.com/docs/tools/data-api", {
+//   auth: {
+//     bearer: `${faceitToken}`
+//   }
+// });
