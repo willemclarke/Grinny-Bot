@@ -7,7 +7,7 @@ export class Faceit {
     this.token = token;
   }
 
-  getStats(game: string, username: string): Promise<any> {
+  getGeneralStats(game: string, username: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const options = {
         url: "https://open.faceit.com/data/v4/players",
@@ -23,4 +23,25 @@ export class Faceit {
       });
     });
   }
+
+  getPlayerStats(playerId: string, game: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const options = {
+        url: `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
+        headers: { Authorization: `Bearer ${this.token}` }
+      };
+
+      request(options, (error, response, body) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(JSON.parse(body));
+      });
+    });
+  }
 }
+
+//create new stats grabbing API call
+// pass correct query parameters etc
+// make this function accept data from the first getStats api call
+//

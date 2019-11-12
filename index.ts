@@ -56,10 +56,14 @@ function runStatsCommand(
     );
   } else {
     const [game, username] = args;
-    return faceit.getStats(game, username).then(stats => {
-      return message.channel.send(
-        `We received ${JSON.stringify(stats.games, null, 2)}`
-      );
+    faceit.getGeneralStats(game, username).then(stats => {
+      const playerId: string = JSON.stringify(stats.player_id);
+      console.log(playerId);
+      return faceit.getPlayerStats(game, playerId).then(stats => {
+        return message.channel.send(
+          `We received ${JSON.stringify(stats, null, 2)}`
+        );
+      });
     });
   }
 }
