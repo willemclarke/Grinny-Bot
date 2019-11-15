@@ -21,7 +21,9 @@ const prefix: string = "!";
 discord.once("ready", () => {
   console.log("Ready!");
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
-  pitOfSmithChannel.send(`bot has successfully started up hostname: ${os.hostname}`);
+  pitOfSmithChannel.send(
+    `bot has successfully started up hostname: ${os.hostname}`
+  );
 });
 
 discord.on("message", message => {
@@ -33,10 +35,14 @@ discord.on("message", message => {
   if (command === "ping") {
     message.channel.send("Pong.");
   } else if (command === "user-info") {
-    message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
+    message.channel.send(
+      `Your username: ${message.author.username}\nYour ID: ${message.author.id}`
+    );
   } else if (command === "args-info") {
     if (!args.length) {
-      return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+      return message.channel.send(
+        `You didn't provide any arguments, ${message.author}!`
+      );
     }
     message.channel.send(`Command name: ${command}\nArguments: ${args}`);
   } else if (command === "stats") {
@@ -62,22 +68,60 @@ function getAndRunFaceitStatistics(
       const { skill_level_label, faceit_elo } = games.csgo;
 
       return faceit.getPlayerStats(player_id, game).then(playerStats => {
-        const discordResponse: object = {
-          "Faceit Level": skill_level_label,
-          Rating: faceit_elo,
-          "Matches Played": playerStats.lifetime.Matches,
-          "Win Rate": `${playerStats.lifetime["Win Rate %"]}%`,
-          "Longest Win Streak": playerStats.lifetime["Longest Win Streak"],
-          "K/D Ratio": playerStats.lifetime["Average K/D Ratio"],
-          "Headshot %": `${playerStats.lifetime["Average Headshots %"]}%`
-        };
-        const formattedObject = formatDiscordMessage(discordResponse);
-        return message.channel.send(`Statistics for ${username}:` + `\`\`\`${formattedObject}\`\`\``);
+        const discordResponse = new Discord.RichEmbed({
+          author: {
+            name: "Smithoath",
+            icon_url:
+              "https://vignette.wikia.nocookie.net/harrypotter/images/e/e3/Gringotts_Head_Goblin.jpg/revision/latest?cb=20100214234030"
+          },
+          title: `Statistics for ${username}`,
+          color: 0x7289da,
+          timestamp: new Date(),
+          thumbnail: {
+            url: "https://source.unsplash.com/random?sig=" + Math.random()
+          },
+          fields: [
+            {
+              name: "Faceit Level",
+              value: skill_level_label
+            },
+            {
+              name: "Rating",
+              value: faceit_elo
+            },
+            {
+              name: "Matches Played",
+              value: playerStats.lifetime.Matches
+            },
+            {
+              name: "Win Rate",
+              value: `${playerStats.lifetime["Win Rate %"]}%`
+            },
+            {
+              name: "Longest Win Streak",
+              value: playerStats.lifetime["Longest Win Streak"]
+            },
+            {
+              name: "K/D Ratio",
+              value: playerStats.lifetime["Average K/D Ratio"]
+            },
+            {
+              name: "Headshot %",
+              value: `${playerStats.lifetime["Average Headshots %"]}%`
+            }
+          ],
+          footer: {
+            text: "Forgive me for I have sinned"
+          }
+        });
+
+        return message.channel.send(discordResponse);
       });
     });
   }
 }
 
+<<<<<<< HEAD
 function getAndDisplayWeather(
   message: Discord.Message,
   args: string[]
@@ -111,4 +155,6 @@ function getAndDisplayWeather(
 function formatDiscordMessage(object: object): object {
   return _.reduce(object, (acc, value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
 }
+=======
+>>>>>>> feat(discord message): using RichEmbed class from discord to display message in discord for nice css
 discord.login(discordToken);
