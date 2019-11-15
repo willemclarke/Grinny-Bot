@@ -40,8 +40,3 @@ export class Faceit {
     });
   }
 }
-
-//create new stats grabbing API call
-// pass correct query parameters etc
-// make this function accept data from the first getStats api call
-//
