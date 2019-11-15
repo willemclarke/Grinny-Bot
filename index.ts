@@ -5,6 +5,7 @@ import { Faceit } from "./faceit";
 
 config();
 
+const _ = require("lodash");
 const faceitToken: string = process.env.FACEIT_TOKEN;
 const faceit = new Faceit(faceitToken);
 
@@ -44,7 +45,9 @@ function getAndRunFaceitStatistics(
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return message.channel.send(`You didn't provide enough arguments: (game (e.g. csgo), name (faceit)) are required`);
+    return message.channel.send(
+      `You didn't provide enough arguments: (game (e.g. csgo), name (faceit)) are required`
+    );
   } else {
     const [game, username] = args;
 
@@ -54,7 +57,7 @@ function getAndRunFaceitStatistics(
 
       return faceit.getPlayerStats(player_id, game).then(playerStats => {
         const discordResponse: object = {
-          "Faceit level": skill_level_label,
+          "Faceit Level": skill_level_label,
           Rating: faceit_elo,
           "Matches Played": playerStats.lifetime.Matches,
           "Win Rate": `${playerStats.lifetime["Win Rate %"]}%`,
@@ -62,12 +65,15 @@ function getAndRunFaceitStatistics(
           "K/D Ratio": playerStats.lifetime["Average K/D Ratio"],
           "Headshot %": `${playerStats.lifetime["Average Headshots %"]}%`
         };
-        return message.channel.send(
-          `Statistics for ${username}:` + `\`\`\`${JSON.stringify(discordResponse, null, 2)}\`\`\``
-        );
+        const formattedObject = formatDiscordMessage(discordResponse);
+        return message.channel.send(`Statistics for ${username}:` + `\`\`\`${formattedObject}\`\`\``);
       });
     });
   }
+}
+
+function formatDiscordMessage(object: object): object {
+  return _.reduce(object, (acc, value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
 }
 
 discord.login(discordToken);
