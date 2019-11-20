@@ -21,9 +21,7 @@ const prefix: string = "!";
 discord.once("ready", () => {
   console.log("Ready!");
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
-  pitOfSmithChannel.send(
-    `bot has successfully started up hostname: ${os.hostname}`
-  );
+  pitOfSmithChannel.send(`bot has successfully started up hostname: ${os.hostname}`);
 });
 
 discord.on("message", message => {
@@ -35,14 +33,10 @@ discord.on("message", message => {
   if (command === "ping") {
     message.channel.send("Pong.");
   } else if (command === "user-info") {
-    message.channel.send(
-      `Your username: ${message.author.username}\nYour ID: ${message.author.id}`
-    );
+    message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
   } else if (command === "args-info") {
     if (!args.length) {
-      return message.channel.send(
-        `You didn't provide any arguments, ${message.author}!`
-      );
+      return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
     }
     message.channel.send(`Command name: ${command}\nArguments: ${args}`);
   } else if (command === "stats") {
@@ -121,7 +115,6 @@ function getAndRunFaceitStatistics(
   }
 }
 
-<<<<<<< HEAD
 function getAndDisplayWeather(
   message: Discord.Message,
   args: string[]
@@ -155,6 +148,4 @@ function getAndDisplayWeather(
 function formatDiscordMessage(object: object): object {
   return _.reduce(object, (acc, value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
 }
-=======
->>>>>>> feat(discord message): using RichEmbed class from discord to display message in discord for nice css
 discord.login(discordToken);
