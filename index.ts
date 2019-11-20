@@ -92,6 +92,7 @@ function getAndDisplayWeather(
       const mainTempCelcius: number = Math.round(weatherDetails.main.temp - 273.15);
       const minTempCelcius: number = Math.round(weatherDetails.main.temp_min - 273.15);
       const maxTempCelcius: number = Math.round(weatherDetails.main.temp_max - 273.15);
+      const windSpeedKmh: number = Math.round(weatherDetails.wind.speed * 1.852);
 
       const weatherObject: object = {
         "Weather Conditions": weatherDetails.weather[0]["description"],
@@ -99,7 +100,7 @@ function getAndDisplayWeather(
         "Minimum Temperature": `${minTempCelcius}°C`,
         "Maximum Temperature": `${maxTempCelcius}°C`,
         Visibility: weatherDetails.visibility,
-        "Wind Speed": `${weatherDetails.wind.speed} Knots`
+        "Wind Speed": `${windSpeedKmh} Km/h`
       };
       const formattedObject = formatDiscordMessage(weatherObject);
       return message.channel.send(`Weather for ${cityName}:` + `\`\`\`${formattedObject}\`\`\``);
