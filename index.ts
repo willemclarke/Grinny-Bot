@@ -2,12 +2,16 @@ import { config } from "dotenv";
 import * as Discord from "discord.js";
 import * as os from "os";
 import { Faceit } from "./faceit";
+import { WeatherAPI } from "./weather";
 
 config();
 
 const _ = require("lodash");
 const faceitToken: string = process.env.FACEIT_TOKEN;
 const faceit = new Faceit(faceitToken);
+
+const weatherToken: string = process.env.WEATHER_TOKEN;
+const weatherAPI = new WeatherAPI(weatherToken);
 
 const discordToken: string = process.env.DISCORD_TOKEN;
 const discord = new Discord.Client();
@@ -37,6 +41,8 @@ discord.on("message", message => {
     message.channel.send(`Command name: ${command}\nArguments: ${args}`);
   } else if (command === "stats") {
     return getAndRunFaceitStatistics(message, args);
+  } else if (command === "weather") {
+    return getAndDisplayWeather(message, args);
   }
 });
 
@@ -72,8 +78,36 @@ function getAndRunFaceitStatistics(
   }
 }
 
+function getAndDisplayWeather(
+  message: Discord.Message,
+  args: string[]
+): Promise<Discord.Message | Discord.Message[]> {
+  if (args.length === null) {
+    return message.channel.send(`You didnt provide enough arguments: city is required`);
+  } else {
+    const [cityName] = args;
+
+    weatherAPI.getWeather(cityName).then(weatherDetails => {
+      console.log(weatherDetails);
+      const mainTempCelcius: number = Math.round(weatherDetails.main.temp - 273.15);
+      const minTempCelcius: number = Math.round(weatherDetails.main.temp_min - 273.15);
+      const maxTempCelcius: number = Math.round(weatherDetails.main.temp_max - 273.15);
+
+      const weatherObject: object = {
+        "Weather Conditions": weatherDetails.weather[0]["description"],
+        Temperature: `${mainTempCelcius}°C`,
+        "Minimum Temperature": `${minTempCelcius}°C`,
+        "Maximum Temperature": `${maxTempCelcius}°C`,
+        Visibility: weatherDetails.visibility,
+        "Wind Speed": `${weatherDetails.wind.speed} Knots`
+      };
+      const formattedObject = formatDiscordMessage(weatherObject);
+      return message.channel.send(`Weather for ${cityName}:` + `\`\`\`${formattedObject}\`\`\``);
+    });
+  }
+}
+
 function formatDiscordMessage(object: object): object {
   return _.reduce(object, (acc, value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
 }
-
 discord.login(discordToken);
