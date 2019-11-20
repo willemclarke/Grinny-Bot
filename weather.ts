@@ -7,7 +7,7 @@ export class WeatherAPI {
     this.token = token;
   }
 
-  getWeather(cityName: string): Promise<object> {
+  getWeather(cityName: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const options = {
         url: `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${this.token}`
