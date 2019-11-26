@@ -1,5 +1,29 @@
 import * as request from "request";
 
+export interface WeatherResponse {
+  weather: [
+    {
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    }
+  ];
+  main: {
+    temp: number;
+    pressure: number;
+    humidity: number;
+    temp_min: number;
+    temp_max: number;
+  };
+  visibility: number;
+  wind: {
+    speed: number;
+  };
+  cod: string | number;
+  message?: string;
+}
+
 export class WeatherAPI {
   token: string;
 
@@ -7,7 +31,7 @@ export class WeatherAPI {
     this.token = token;
   }
 
-  getWeather(cityName: string): Promise<any> {
+  getWeather(cityName: string): Promise<WeatherResponse> {
     return new Promise((resolve, reject) => {
       const options = {
         url: `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${this.token}`

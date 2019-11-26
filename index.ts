@@ -2,11 +2,11 @@ import { config } from "dotenv";
 import * as Discord from "discord.js";
 import * as os from "os";
 import { Faceit } from "./faceit";
-import { WeatherAPI } from "./weather";
+import { WeatherAPI, WeatherResponse } from "./weather";
+import * as _ from "lodash";
 
 config();
 
-const _ = require("lodash");
 const faceitToken: string = process.env.FACEIT_TOKEN;
 const faceit = new Faceit(faceitToken);
 
@@ -26,8 +26,11 @@ discord.once("ready", () => {
 
 discord.on("message", message => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-  const args: string[] = message.content.slice(prefix.length).split(" ");
+  const splitStringArgs: string[] = message.content.slice(prefix.length).split('"');
+  const args: string[] = _.chain(splitStringArgs)
+    .flatMap((arg, index) => (index === 0 ? arg.split(" ") : arg))
+    .compact()
+    .value();
   const command: string = args.shift().toLowerCase();
 
   if (command === "ping") {
@@ -51,9 +54,7 @@ function getAndRunFaceitStatistics(
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return message.channel.send(
-      `You didn't provide enough arguments: (game (e.g. csgo), name (faceit)) are required`
-    );
+    return message.channel.send(`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>`);
   } else {
     const [game, username] = args;
 
@@ -62,7 +63,7 @@ function getAndRunFaceitStatistics(
       const { skill_level_label, faceit_elo } = games.csgo;
 
       return faceit.getPlayerStats(player_id, game).then(playerStats => {
-        const discordResponse = new Discord.RichEmbed({
+        const discordStatsResponse = new Discord.RichEmbed({
           author: {
             name: "Smithoath",
             icon_url:
@@ -109,7 +110,7 @@ function getAndRunFaceitStatistics(
           }
         });
 
-        return message.channel.send(discordResponse);
+        return message.channel.send(discordStatsResponse);
       });
     });
   }
@@ -119,13 +120,15 @@ function getAndDisplayWeather(
   message: Discord.Message,
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
-  if (args.length === null) {
-    return message.channel.send(`You didnt provide enough arguments: city is required`);
+  if (!args.length) {
+    return message.channel.send(`You didnt provide enough arguments: !weather <city_name> is required`);
   } else {
     const [cityName] = args;
 
     weatherAPI.getWeather(cityName).then(weatherDetails => {
-      console.log(weatherDetails);
+      if (weatherDetails.cod !== 200) {
+        return message.channel.send(_.upperFirst(weatherDetails.message || "Unknown error occured"));
+      }
       const mainTempCelcius: number = Math.round(weatherDetails.main.temp - 273.15);
       const minTempCelcius: number = Math.round(weatherDetails.main.temp_min - 273.15);
       const maxTempCelcius: number = Math.round(weatherDetails.main.temp_max - 273.15);
@@ -139,13 +142,14 @@ function getAndDisplayWeather(
         Visibility: weatherDetails.visibility,
         "Wind Speed": `${windSpeedKmh} Km/h`
       };
-      const formattedObject = formatDiscordMessage(weatherObject);
-      return message.channel.send(`Weather for ${cityName}:` + `\`\`\`${formattedObject}\`\`\``);
+      const discordWeatherResponse = formatDiscordMessage(weatherObject);
+      return message.channel.send(`Weather for ${cityName}:` + `\`\`\`${discordWeatherResponse}\`\`\``);
     });
   }
 }
 
-function formatDiscordMessage(object: object): object {
+function formatDiscordMessage(object: object): string {
   return _.reduce(object, (acc, value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
 }
+
 discord.login(discordToken);
