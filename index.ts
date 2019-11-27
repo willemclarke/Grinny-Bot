@@ -44,11 +44,11 @@ discord.on("message", message => {
   } else if (command === "help") {
     return displayHelpCommands(message);
   } else if (command === "stats") {
-    return getAndRunFaceitStatistics(message, args);
+    return getFaceitStatistics(message, args);
   } else if (command === "weather") {
-    return getAndDisplayWeather(message, args);
+    return getWeather(message, args);
   } else if (command === "stocks") {
-    return getAndDisplayIndividualStockData(message, args);
+    return getIndividualStockData(message, args);
   }
 });
 
@@ -74,10 +74,7 @@ function displayHelpCommands(message: Discord.Message): Promise<Discord.Message 
   return message.channel.send(listOfCommands);
 }
 
-function getAndRunFaceitStatistics(
-  message: Discord.Message,
-  args: string[]
-): Promise<Discord.Message | Discord.Message[]> {
+function getFaceitStatistics(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
     return message.channel.send(
       `\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``
@@ -140,7 +137,7 @@ function getAndRunFaceitStatistics(
   }
 }
 
-function getAndDisplayWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
+function getWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
     return message.channel.send(
       `\`\`\`You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""\`\`\``
@@ -200,7 +197,7 @@ function getAndDisplayWeather(message: Discord.Message, args: string[]): Promise
   }
 }
 
-function getAndDisplayIndividualStockData(
+function getIndividualStockData(
   message: Discord.Message,
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
@@ -212,19 +209,20 @@ function getAndDisplayIndividualStockData(
     const [symbol] = args;
 
     stocksAPI.getStockData(symbol).then(stockResponse => {
-      const discordResponseStockData: object = {
-        "Stock Name & Symbol": `${stockResponse.data[0].name} & ${stockResponse.data[0].symbol}`,
-        "Current Price": `$${stockResponse.data[0].price}`,
-        "Opening Price": `$${stockResponse.data[0].price_open}`,
-        "Days Lowest Price": `$${stockResponse.data[0].day_low}`,
-        "Days Highest Price": `$${stockResponse.data[0].day_high}`,
-        "52 Week Highest Price": `$${stockResponse.data[0]["52_week_high"]}`,
-        "52 Week Lowest Price": `$${stockResponse.data[0]["52_week_low"]}`,
-        "Yesterdays Closing Price": `$${stockResponse.data[0].close_yesterday}`,
-        "Market Capitalization": `$${stockResponse.data[0].market_cap}`,
-        "Earnings Per Share": `$${stockResponse.data[0].eps}`,
-        "Average Trading Volume": `${stockResponse.data[0].volume_avg}`,
-        "Trading On": `${stockResponse.data[0].stock_exchange_long} AKA ${stockResponse.data[0].stock_exchange_short}`
+      const data = stockResponse.data[0];
+      const discordResponseStockData = {
+        "Stock Name & Symbol": `${data.name} & ${data.symbol}`,
+        "Current Price": `$${data.price}`,
+        "Opening Price": `$${data.price_open}`,
+        "Days Lowest Price": `$${data.day_low}`,
+        "Days Highest Price": `$${data.day_high}`,
+        "52 Week Highest Price": `$${data["52_week_high"]}`,
+        "52 Week Lowest Price": `$${data["52_week_low"]}`,
+        "Yesterdays Closing Price": `$${data.close_yesterday}`,
+        "Market Capitalization": `$${data.market_cap}`,
+        "Earnings Per Share": `$${data.eps}`,
+        "Average Trading Volume": `${data.volume_avg}`,
+        "Trading On": `${data.stock_exchange_long} AKA ${data.stock_exchange_short}`
       };
 
       const formattedStockData = formatDiscordMessage(discordResponseStockData);
