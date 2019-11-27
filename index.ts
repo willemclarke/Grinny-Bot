@@ -3,6 +3,7 @@ import * as Discord from "discord.js";
 import * as os from "os";
 import { Faceit } from "./faceit";
 import { WeatherAPI, WeatherResponse } from "./weather";
+import { StocksAPI, StocksResponse } from "./stocks";
 import * as _ from "lodash";
 
 config();
@@ -12,6 +13,9 @@ const faceit = new Faceit(faceitToken);
 
 const weatherToken: string = process.env.WEATHER_TOKEN;
 const weatherAPI = new WeatherAPI(weatherToken);
+
+const stocksToken: string = process.env.STOCKS_TOKEN;
+const stocksAPI = new StocksAPI(stocksToken);
 
 const discordToken: string = process.env.DISCORD_TOKEN;
 const discord = new Discord.Client();
@@ -43,6 +47,8 @@ discord.on("message", message => {
     return getAndRunFaceitStatistics(message, args);
   } else if (command === "weather") {
     return getAndDisplayWeather(message, args);
+  } else if (command === "stocks") {
+    return getAndDisplayIndividualStockData(message, args);
   }
 });
 
@@ -64,7 +70,7 @@ function displayHelpCommands(message: Discord.Message): Promise<Discord.Message 
       }
     ]
   });
-  // `\`\`\`${formattedListOfCommands}\`\`\``
+
   return message.channel.send(listOfCommands);
 }
 
@@ -73,7 +79,9 @@ function getAndRunFaceitStatistics(
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return message.channel.send(`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>`);
+    return message.channel.send(
+      `\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``
+    );
   } else {
     const [game, username] = args;
 
@@ -132,13 +140,10 @@ function getAndRunFaceitStatistics(
   }
 }
 
-function getAndDisplayWeather(
-  message: Discord.Message,
-  args: string[]
-): Promise<Discord.Message | Discord.Message[]> {
+function getAndDisplayWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
     return message.channel.send(
-      `You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""`
+      `\`\`\`You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""\`\`\``
     );
   } else {
     const [cityName] = args;
@@ -191,6 +196,39 @@ function getAndDisplayWeather(
 
       // using codeblock === `\`\`\`${discordWeatherResponse}\`\`\``
       return message.channel.send(discordWeatherResponse);
+    });
+  }
+}
+
+function getAndDisplayIndividualStockData(
+  message: Discord.Message,
+  args: string[]
+): Promise<Discord.Message | Discord.Message[]> {
+  if (!args.length) {
+    return message.channel.send(
+      `\`\`\`You didn't provide enough arguments, requires: <!stocks STOCKSYMBOL>, e.g. <!stocks TWTR>\`\`\``
+    );
+  } else {
+    const [symbol] = args;
+
+    stocksAPI.getStockData(symbol).then(stockResponse => {
+      const discordResponseStockData: object = {
+        "Stock Name & Symbol": `${stockResponse.data[0].name} & ${stockResponse.data[0].symbol}`,
+        "Current Price": `$${stockResponse.data[0].price}`,
+        "Opening Price": `$${stockResponse.data[0].price_open}`,
+        "Days Lowest Price": `$${stockResponse.data[0].day_low}`,
+        "Days Highest Price": `$${stockResponse.data[0].day_high}`,
+        "52 Week Highest Price": `$${stockResponse.data[0]["52_week_high"]}`,
+        "52 Week Lowest Price": `$${stockResponse.data[0]["52_week_low"]}`,
+        "Yesterdays Closing Price": `$${stockResponse.data[0].close_yesterday}`,
+        "Market Capitalization": `$${stockResponse.data[0].market_cap}`,
+        "Earnings Per Share": `$${stockResponse.data[0].eps}`,
+        "Average Trading Volume": `${stockResponse.data[0].volume_avg}`,
+        "Trading On": `${stockResponse.data[0].stock_exchange_long} AKA ${stockResponse.data[0].stock_exchange_short}`
+      };
+
+      const formattedStockData = formatDiscordMessage(discordResponseStockData);
+      return message.channel.send(`Stock Data for ${symbol}: \`\`\`${formattedStockData}\`\`\``);
     });
   }
 }
