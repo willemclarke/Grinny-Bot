@@ -37,17 +37,36 @@ discord.on("message", message => {
     message.channel.send("Pong.");
   } else if (command === "user-info") {
     message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
-  } else if (command === "args-info") {
-    if (!args.length) {
-      return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
-    }
-    message.channel.send(`Command name: ${command}\nArguments: ${args}`);
+  } else if (command === "help") {
+    return displayHelpCommands(message);
   } else if (command === "stats") {
     return getAndRunFaceitStatistics(message, args);
   } else if (command === "weather") {
     return getAndDisplayWeather(message, args);
   }
 });
+
+function displayHelpCommands(message: Discord.Message): Promise<Discord.Message | Discord.Message[]> {
+  const listOfCommands = new Discord.RichEmbed({
+    author: {
+      name: "Smithoath",
+      icon_url:
+        "https://vignette.wikia.nocookie.net/harrypotter/images/e/e3/Gringotts_Head_Goblin.jpg/revision/latest?cb=20100214234030"
+    },
+    title: "List of Discord Commands",
+    color: 0x7289da,
+    timestamp: new Date(),
+    fields: [
+      { name: "!stats", value: "Faceit Statistics Command: requires <!stats csgo Faceit_Name>" },
+      {
+        name: "!weather",
+        value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`
+      }
+    ]
+  });
+  // `\`\`\`${formattedListOfCommands}\`\`\``
+  return message.channel.send(listOfCommands);
+}
 
 function getAndRunFaceitStatistics(
   message: Discord.Message,
@@ -72,9 +91,6 @@ function getAndRunFaceitStatistics(
           title: `Statistics for ${username}`,
           color: 0x7289da,
           timestamp: new Date(),
-          thumbnail: {
-            url: "https://source.unsplash.com/random?sig=" + Math.random()
-          },
           fields: [
             {
               name: "Faceit Level",
@@ -121,7 +137,9 @@ function getAndDisplayWeather(
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
-    return message.channel.send(`You didnt provide enough arguments: !weather <city_name> is required`);
+    return message.channel.send(
+      `You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""`
+    );
   } else {
     const [cityName] = args;
 
@@ -134,16 +152,45 @@ function getAndDisplayWeather(
       const maxTempCelcius: number = Math.round(weatherDetails.main.temp_max - 273.15);
       const windSpeedKmh: number = Math.round(weatherDetails.wind.speed * 1.852);
 
-      const weatherObject: object = {
-        "Weather Conditions": weatherDetails.weather[0]["description"],
-        Temperature: `${mainTempCelcius}°C`,
-        "Minimum Temperature": `${minTempCelcius}°C`,
-        "Maximum Temperature": `${maxTempCelcius}°C`,
-        Visibility: weatherDetails.visibility,
-        "Wind Speed": `${windSpeedKmh} Km/h`
-      };
-      const discordWeatherResponse = formatDiscordMessage(weatherObject);
-      return message.channel.send(`Weather for ${cityName}:` + `\`\`\`${discordWeatherResponse}\`\`\``);
+      const discordWeatherResponse = new Discord.RichEmbed({
+        author: {
+          name: "Smithoath",
+          icon_url:
+            "https://vignette.wikia.nocookie.net/harrypotter/images/e/e3/Gringotts_Head_Goblin.jpg/revision/latest?cb=20100214234030"
+        },
+        title: `Weather for ${cityName}`,
+        color: 0x7289da,
+        timestamp: new Date(),
+        fields: [
+          {
+            name: "Weather Conditions",
+            value: weatherDetails.weather[0]["description"]
+          },
+          {
+            name: "Temperature",
+            value: `${mainTempCelcius}°C`
+          },
+          {
+            name: "Minimum Temperature",
+            value: `${minTempCelcius}°C`
+          },
+          {
+            name: "Maximum Temperature",
+            value: `${maxTempCelcius}°C`
+          },
+          {
+            name: "Visibility",
+            value: `${weatherDetails.visibility}`
+          },
+          {
+            name: "Wind Speed",
+            value: `${windSpeedKmh} Km/h`
+          }
+        ]
+      });
+
+      // using codeblock === `\`\`\`${discordWeatherResponse}\`\`\``
+      return message.channel.send(discordWeatherResponse);
     });
   }
 }
