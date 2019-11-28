@@ -25,7 +25,7 @@ const prefix: string = "!";
 discord.once("ready", () => {
   console.log("Ready!");
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
-  pitOfSmithChannel.send(`bot has successfully started up hostname: ${os.hostname}`);
+  pitOfSmithChannel.send(`\`\`\`Bot has successfully started up hostname: ${os.hostname}\`\`\``);
 });
 
 discord.on("message", message => {
@@ -67,6 +67,10 @@ function displayHelpCommands(message: Discord.Message): Promise<Discord.Message 
       {
         name: "!weather",
         value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`
+      },
+      {
+        name: "!stocks",
+        value: `Stock Market Information Command: requires <!stocks STOCK_SYMBOL> e.g. <!stocks TWTR>`
       }
     ]
   });
@@ -147,7 +151,9 @@ function getWeather(message: Discord.Message, args: string[]): Promise<Discord.M
 
     weatherAPI.getWeather(cityName).then(weatherDetails => {
       if (weatherDetails.cod !== 200) {
-        return message.channel.send(_.upperFirst(weatherDetails.message || "Unknown error occured"));
+        return message.channel.send(
+          _.upperFirst(`\`\`\`weatherDetails.message\`\`\`` || `\`\`\`Unknown error occured\`\`\``)
+        );
       }
       const mainTempCelcius: number = Math.round(weatherDetails.main.temp - 273.15);
       const minTempCelcius: number = Math.round(weatherDetails.main.temp_min - 273.15);
@@ -191,7 +197,6 @@ function getWeather(message: Discord.Message, args: string[]): Promise<Discord.M
         ]
       });
 
-      // using codeblock === `\`\`\`${discordWeatherResponse}\`\`\``
       return message.channel.send(discordWeatherResponse);
     });
   }
@@ -208,26 +213,31 @@ function getIndividualStockData(
   } else {
     const [symbol] = args;
 
-    stocksAPI.getStockData(symbol).then(stockResponse => {
-      const data = stockResponse.data[0];
-      const discordResponseStockData = {
-        "Stock Name & Symbol": `${data.name} & ${data.symbol}`,
-        "Current Price": `$${data.price}`,
-        "Opening Price": `$${data.price_open}`,
-        "Days Lowest Price": `$${data.day_low}`,
-        "Days Highest Price": `$${data.day_high}`,
-        "52 Week Highest Price": `$${data["52_week_high"]}`,
-        "52 Week Lowest Price": `$${data["52_week_low"]}`,
-        "Yesterdays Closing Price": `$${data.close_yesterday}`,
-        "Market Capitalization": `$${data.market_cap}`,
-        "Earnings Per Share": `$${data.eps}`,
-        "Average Trading Volume": `${data.volume_avg}`,
-        "Trading On": `${data.stock_exchange_long} AKA ${data.stock_exchange_short}`
-      };
+    stocksAPI
+      .getStockData(symbol)
+      .then(stockResponse => {
+        const data = stockResponse.data[0];
+        const discordResponseStockData = {
+          "Stock Name & Symbol": `${data.name} & ${data.symbol}`,
+          "Current Price": `$${data.price}`,
+          "Opening Price": `$${data.price_open}`,
+          "Days Lowest Price": `$${data.day_low}`,
+          "Days Highest Price": `$${data.day_high}`,
+          "52 Week Highest Price": `$${data["52_week_high"]}`,
+          "52 Week Lowest Price": `$${data["52_week_low"]}`,
+          "Yesterdays Closing Price": `$${data.close_yesterday}`,
+          "Market Capitalization": `$${data.market_cap}`,
+          "Earnings Per Share": `$${data.eps}`,
+          "Average Trading Volume": `${data.volume_avg}`,
+          "Trading On": `${data.stock_exchange_long} AKA ${data.stock_exchange_short}`
+        };
 
-      const formattedStockData = formatDiscordMessage(discordResponseStockData);
-      return message.channel.send(`Stock Data for ${symbol}: \`\`\`${formattedStockData}\`\`\``);
-    });
+        const formattedStockData = formatDiscordMessage(discordResponseStockData);
+        return message.channel.send(`Stock Data for ${symbol}: \`\`\`${formattedStockData}\`\`\``);
+      })
+      .catch(error => {
+        return message.channel.send(`\`\`\`${error}\`\`\``);
+      });
   }
 }
 
