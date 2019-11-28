@@ -209,9 +209,7 @@ function getIndividualStockData(
     const [symbol] = args;
 
     stocksAPI.getStockData(symbol).then(stockResponse => {
-      console.log(stockResponse);
       const data = stockResponse.data[0];
-      console.log(data);
       const discordResponseStockData = {
         "Stock Name & Symbol": `${data.name} & ${data.symbol}`,
         "Current Price": `$${data.price}`,
