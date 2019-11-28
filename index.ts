@@ -3,6 +3,7 @@ import * as Discord from "discord.js";
 import * as os from "os";
 import { Faceit } from "./faceit";
 import { WeatherAPI, WeatherResponse } from "./weather";
+import { StocksAPI, StocksResponse } from "./stocks";
 import * as _ from "lodash";
 
 config();
@@ -12,6 +13,9 @@ const faceit = new Faceit(faceitToken);
 
 const weatherToken: string = process.env.WEATHER_TOKEN;
 const weatherAPI = new WeatherAPI(weatherToken);
+
+const stocksToken: string = process.env.STOCKS_TOKEN;
+const stocksAPI = new StocksAPI(stocksToken);
 
 const discordToken: string = process.env.DISCORD_TOKEN;
 const discord = new Discord.Client();
@@ -40,9 +44,11 @@ discord.on("message", message => {
   } else if (command === "help") {
     return displayHelpCommands(message);
   } else if (command === "stats") {
-    return getAndRunFaceitStatistics(message, args);
+    return getFaceitStatistics(message, args);
   } else if (command === "weather") {
-    return getAndDisplayWeather(message, args);
+    return getWeather(message, args);
+  } else if (command === "stocks") {
+    return getIndividualStockData(message, args);
   }
 });
 
@@ -64,16 +70,15 @@ function displayHelpCommands(message: Discord.Message): Promise<Discord.Message 
       }
     ]
   });
-  // `\`\`\`${formattedListOfCommands}\`\`\``
+
   return message.channel.send(listOfCommands);
 }
 
-function getAndRunFaceitStatistics(
-  message: Discord.Message,
-  args: string[]
-): Promise<Discord.Message | Discord.Message[]> {
+function getFaceitStatistics(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return message.channel.send(`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>`);
+    return message.channel.send(
+      `\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``
+    );
   } else {
     const [game, username] = args;
 
@@ -132,13 +137,10 @@ function getAndRunFaceitStatistics(
   }
 }
 
-function getAndDisplayWeather(
-  message: Discord.Message,
-  args: string[]
-): Promise<Discord.Message | Discord.Message[]> {
+function getWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
     return message.channel.send(
-      `You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""`
+      `\`\`\`You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""\`\`\``
     );
   } else {
     const [cityName] = args;
@@ -191,6 +193,40 @@ function getAndDisplayWeather(
 
       // using codeblock === `\`\`\`${discordWeatherResponse}\`\`\``
       return message.channel.send(discordWeatherResponse);
+    });
+  }
+}
+
+function getIndividualStockData(
+  message: Discord.Message,
+  args: string[]
+): Promise<Discord.Message | Discord.Message[]> {
+  if (!args.length) {
+    return message.channel.send(
+      `\`\`\`You didn't provide enough arguments, requires: <!stocks STOCKSYMBOL>, e.g. <!stocks TWTR>\`\`\``
+    );
+  } else {
+    const [symbol] = args;
+
+    stocksAPI.getStockData(symbol).then(stockResponse => {
+      const data = stockResponse.data[0];
+      const discordResponseStockData = {
+        "Stock Name & Symbol": `${data.name} & ${data.symbol}`,
+        "Current Price": `$${data.price}`,
+        "Opening Price": `$${data.price_open}`,
+        "Days Lowest Price": `$${data.day_low}`,
+        "Days Highest Price": `$${data.day_high}`,
+        "52 Week Highest Price": `$${data["52_week_high"]}`,
+        "52 Week Lowest Price": `$${data["52_week_low"]}`,
+        "Yesterdays Closing Price": `$${data.close_yesterday}`,
+        "Market Capitalization": `$${data.market_cap}`,
+        "Earnings Per Share": `$${data.eps}`,
+        "Average Trading Volume": `${data.volume_avg}`,
+        "Trading On": `${data.stock_exchange_long} AKA ${data.stock_exchange_short}`
+      };
+
+      const formattedStockData = formatDiscordMessage(discordResponseStockData);
+      return message.channel.send(`Stock Data for ${symbol}: \`\`\`${formattedStockData}\`\`\``);
     });
   }
 }
