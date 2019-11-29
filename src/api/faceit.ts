@@ -1,5 +1,27 @@
 import * as request from "request";
 
+export interface FaceitBasicResponse {
+  player_id: string;
+  nickname: string;
+  games: {
+    csgo: {
+      skill_level_label: string;
+      skill_level: number;
+      faceit_elo: number;
+    };
+  };
+}
+
+export interface FaceitIndividualResponse {
+  lifetime: {
+    Matches: string;
+    "Win Rate %": string;
+    "Longest Win Streak": string;
+    "Average K/D Ratio": string;
+    "Average Headshots %": string;
+  };
+}
+
 export class Faceit {
   token: string;
 
@@ -7,7 +29,7 @@ export class Faceit {
     this.token = token;
   }
 
-  getGeneralStats(game: string, username: string): Promise<any> {
+  getGeneralStats(game: string, username: string): Promise<FaceitBasicResponse> {
     return new Promise((resolve, reject) => {
       const options = {
         url: "https://open.faceit.com/data/v4/players",
@@ -24,7 +46,7 @@ export class Faceit {
     });
   }
 
-  getPlayerStats(playerId: string, game: string): Promise<any> {
+  getPlayerStats(playerId: string, game: string): Promise<FaceitIndividualResponse> {
     return new Promise((resolve, reject) => {
       const options = {
         url: `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
