@@ -14,6 +14,7 @@ export function getWeather(message: Discord.Message, args: string[]): Promise<Di
     const [cityName] = args;
 
     weatherAPI.getWeather(cityName).then(weatherDetails => {
+      console.log(weatherDetails);
       if (weatherDetails.cod !== 200) {
         return message.channel.send(
           _.upperFirst(`\`\`\`weatherDetails.message\`\`\`` || `\`\`\`Unknown error occured\`\`\``)
