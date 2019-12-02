@@ -93,7 +93,7 @@ function getFaceitUser(game: string, username: string): Promise<{ username: stri
 export function faceitUserData(message: Discord.Message) {
   const promises = [
     getFaceitUser("csgo", "m00sebreeder"),
-    getFaceitUser("csgo", "Jidox"),
+    getFaceitUser("csgo", "street_rat"),
     getFaceitUser("csgo", "wetstickyman"),
     getFaceitUser("csgo", "Texta"),
     getFaceitUser("csgo", "treena"),

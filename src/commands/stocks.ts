@@ -20,7 +20,6 @@ export function getIndividualStockData(
     stocksAPI
       .getStockData(symbol)
       .then(stockResponse => {
-        console.log(stockResponse);
         const data = stockResponse.data[0];
         const discordResponseStockData = {
           "Stock Name & Symbol": `${data.name} & ${data.symbol}`,
