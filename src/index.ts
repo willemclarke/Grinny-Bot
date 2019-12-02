@@ -4,12 +4,25 @@ import * as os from "os";
 import { getFaceitStatistics, faceitUserData } from "./commands/faceit";
 import { getWeather } from "./commands/weather";
 import { getIndividualStockData } from "./commands/stocks";
+import { Faceit } from "./api/faceit";
+import { WeatherAPI } from "./api/weather";
+import { StocksAPI } from "./api/stocks";
 import * as _ from "lodash";
 
 config();
 
 const discordToken: string = process.env.DISCORD_TOKEN;
 const discord = new Discord.Client();
+
+const faceitToken: string = process.env.FACEIT_TOKEN;
+export const faceit = new Faceit(faceitToken);
+
+const weatherToken: string = process.env.WEATHER_TOKEN;
+export const weatherAPI = new WeatherAPI(weatherToken);
+
+const stocksToken: string = process.env.STOCKS_TOKEN;
+export const stocksAPI = new StocksAPI(stocksToken);
+
 const pitId: string = "642229195405131776";
 const prefix: string = "!";
 

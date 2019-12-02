@@ -1,16 +1,6 @@
-import { config } from "dotenv";
 import * as Discord from "discord.js";
-import { Faceit, FaceitBasicResponse, FaceitIndividualResponse } from "../api/faceit";
-import { formatDiscordMessage } from "..";
+import { formatDiscordMessage, faceit } from "..";
 import * as _ from "lodash";
-
-config();
-
-const faceitToken: string = process.env.FACEIT_TOKEN;
-const faceit = new Faceit(faceitToken);
-
-const plotlyToken: string = process.env.PLOTLY_TOKEN;
-const plotlyUser: string = process.env.PLOTLY_USERNAME;
 
 export function getFaceitStatistics(
   message: Discord.Message,

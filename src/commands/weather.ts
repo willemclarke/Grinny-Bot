@@ -1,12 +1,6 @@
-import { config } from "dotenv";
 import * as Discord from "discord.js";
-import { WeatherAPI } from "../api/weather";
 import * as _ from "lodash";
-
-config();
-
-const weatherToken: string = process.env.WEATHER_TOKEN;
-const weatherAPI = new WeatherAPI(weatherToken);
+import { weatherAPI } from "..";
 
 export function getWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
