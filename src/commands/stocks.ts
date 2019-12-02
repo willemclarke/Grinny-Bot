@@ -1,7 +1,10 @@
+import { config } from "dotenv";
 import * as Discord from "discord.js";
 import * as _ from "lodash";
 import { formatDiscordMessage } from "..";
 import { StocksAPI } from "../api/stocks";
+
+config();
 
 const stocksToken: string = process.env.STOCKS_TOKEN;
 const stocksAPI = new StocksAPI(stocksToken);

@@ -1,7 +1,10 @@
+import { config } from "dotenv";
 import * as Discord from "discord.js";
 import { Faceit, FaceitBasicResponse, FaceitIndividualResponse } from "../api/faceit";
 import { formatDiscordMessage } from "..";
 import * as _ from "lodash";
+
+config();
 
 const faceitToken: string = process.env.FACEIT_TOKEN;
 const faceit = new Faceit(faceitToken);
@@ -23,13 +26,11 @@ export function getFaceitStatistics(
     faceit
       .getGeneralStats(game, username)
       .then(playerDetails => {
-        console.log(playerDetails);
         const { player_id, games } = playerDetails;
         const { skill_level_label, faceit_elo } = games.csgo;
         const faceitEloString = faceit_elo.toString();
 
         return faceit.getPlayerStats(player_id, game).then(playerStats => {
-          console.log(playerStats);
           const discordStatsResponse = new Discord.RichEmbed({
             author: {
               name: "Smithoath",
@@ -85,7 +86,6 @@ export function getFaceitStatistics(
 
 function getFaceitUser(game: string, username: string): Promise<{ username: string; rating: number }> {
   return faceit.getGeneralStats(game, username).then(playerDetails => {
-    console.log(playerDetails);
     return { username: playerDetails.nickname, rating: playerDetails.games.csgo.faceit_elo };
   });
 }
@@ -109,7 +109,7 @@ export function faceitUserData(message: Discord.Message) {
         (acc, user) => {
           return { ...acc, [user.username]: user.rating };
         },
-        {} // <-- = acc
+        {}
       );
       const formattedPlayerElos = formatDiscordMessage(playerElos);
       return message.channel.send(`\`\`\`${formattedPlayerElos}\`\`\``);

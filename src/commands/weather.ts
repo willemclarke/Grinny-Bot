@@ -1,6 +1,9 @@
+import { config } from "dotenv";
 import * as Discord from "discord.js";
 import { WeatherAPI } from "../api/weather";
 import * as _ from "lodash";
+
+config();
 
 const weatherToken: string = process.env.WEATHER_TOKEN;
 const weatherAPI = new WeatherAPI(weatherToken);
@@ -14,7 +17,6 @@ export function getWeather(message: Discord.Message, args: string[]): Promise<Di
     const [cityName] = args;
 
     weatherAPI.getWeather(cityName).then(weatherDetails => {
-      console.log(weatherDetails);
       if (weatherDetails.cod !== 200) {
         return message.channel.send(
           _.upperFirst(`\`\`\`weatherDetails.message\`\`\`` || `\`\`\`Unknown error occured\`\`\``)
