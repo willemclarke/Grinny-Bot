@@ -6,6 +6,9 @@ import * as _ from "lodash";
 const faceitToken: string = process.env.FACEIT_TOKEN;
 const faceit = new Faceit(faceitToken);
 
+const plotlyToken: string = process.env.PLOTLY_TOKEN;
+const plotlyUser: string = process.env.PLOTLY_USERNAME;
+
 export function getFaceitStatistics(
   message: Discord.Message,
   args: string[]
@@ -18,6 +21,7 @@ export function getFaceitStatistics(
     const [game, username] = args;
 
     faceit.getGeneralStats(game, username).then(playerDetails => {
+      console.log("GET GENERAL STATS" + playerDetails);
       const { player_id, games } = playerDetails;
       const { skill_level_label, faceit_elo } = games.csgo;
       const faceitEloString = faceit_elo.toString();
@@ -75,6 +79,7 @@ export function getFaceitStatistics(
 
 function getFaceitUser(game: string, username: string): Promise<{ username: string; rating: number }> {
   return faceit.getGeneralStats(game, username).then(playerDetails => {
+    console.log("GETFACEITUSER" + playerDetails);
     return { username: playerDetails.nickname, rating: playerDetails.games.csgo.faceit_elo };
   });
 }
