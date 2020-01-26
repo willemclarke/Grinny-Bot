@@ -2,8 +2,8 @@
 
 - Fun project for my/friends Discord server to create a bot which has features we can use to benefit the server.
 
-- Project was also used as springboard to learn TypeScript
-- Also greatly improved my understanding of working with APIS for data, dealing with promises and creating type interfaces
+- Project was also used as a springboard to learn TypeScript
+- Also greatly improved my understanding of working with APIs to fetch data, dealing with promises and creating type interfaces
 
 - First feature was a simple weather feature so we can simply type in the chat and see eachothers weather conditions:
 
