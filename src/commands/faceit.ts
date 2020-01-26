@@ -2,14 +2,9 @@ import * as Discord from "discord.js";
 import { formatDiscordMessage, faceit } from "..";
 import * as _ from "lodash";
 
-export function getFaceitStatistics(
-  message: Discord.Message,
-  args: string[]
-): Promise<Discord.Message | Discord.Message[]> {
+export function getFaceitStatistics(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return message.channel.send(
-      `\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``
-    );
+    return message.channel.send(`\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``);
   } else {
     const [game, username] = args;
 
@@ -23,9 +18,8 @@ export function getFaceitStatistics(
         return faceit.getPlayerStats(player_id, game).then(playerStats => {
           const discordStatsResponse = new Discord.RichEmbed({
             author: {
-              name: "Smithoath",
-              icon_url:
-                "https://vignette.wikia.nocookie.net/harrypotter/images/e/e3/Gringotts_Head_Goblin.jpg/revision/lafaceitEloString?cb=20100214234030"
+              name: "GrinnyBot",
+              icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
             },
             title: `Statistics for ${username}`,
             color: 0x7289da,
@@ -59,10 +53,7 @@ export function getFaceitStatistics(
                 name: "Headshot %",
                 value: `${playerStats.lifetime["Average Headshots %"]}%`
               }
-            ],
-            footer: {
-              text: "Forgive me for I have sinned"
-            }
+            ]
           });
 
           return message.channel.send(discordStatsResponse);
@@ -84,6 +75,7 @@ export function faceitUserData(message: Discord.Message) {
   const promises = [
     getFaceitUser("csgo", "m00sebreeder"),
     getFaceitUser("csgo", "street_rat"),
+    getFaceitUser("csgo", "flickzy"),
     getFaceitUser("csgo", "wetstickyman"),
     getFaceitUser("csgo", "Texta"),
     getFaceitUser("csgo", "treena"),

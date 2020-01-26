@@ -61,9 +61,8 @@ discord.on("message", message => {
 function displayHelpCommands(message: Discord.Message): Promise<Discord.Message | Discord.Message[]> {
   const listOfCommands = new Discord.RichEmbed({
     author: {
-      name: "Smithoath",
-      icon_url:
-        "https://vignette.wikia.nocookie.net/harrypotter/images/e/e3/Gringotts_Head_Goblin.jpg/revision/latest?cb=20100214234030"
+      name: "GrinnyBot",
+      icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
     },
     title: "List of Discord Commands",
     color: 0x7289da,
