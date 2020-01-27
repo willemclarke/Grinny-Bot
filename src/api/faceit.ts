@@ -10,6 +10,13 @@ export interface FaceitBasicResponse {
       faceit_elo: number;
     };
   };
+  faceit_url: string;
+  errors: [
+    {
+      message: string;
+      http_status: number | string;
+    }
+  ];
 }
 
 export interface FaceitIndividualResponse {

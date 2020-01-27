@@ -8,60 +8,69 @@ export function getFaceitStatistics(message: Discord.Message, args: string[]): P
   } else {
     const [game, username] = args;
 
-    faceit
-      .getGeneralStats(game, username)
-      .then(playerDetails => {
-        const { player_id, games } = playerDetails;
-        const { skill_level_label, faceit_elo } = games.csgo;
-        const faceitEloString = faceit_elo.toString();
+    faceit.getGeneralStats(game, username).then(playerDetails => {
+      if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
+        return message.channel.send(
+          `\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``
+        );
+      }
 
-        return faceit.getPlayerStats(player_id, game).then(playerStats => {
-          const discordStatsResponse = new Discord.RichEmbed({
-            author: {
-              name: "GrinnyBot",
-              icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+      const { player_id, games } = playerDetails;
+      const { skill_level_label, faceit_elo } = games.csgo;
+      const faceitEloString = faceit_elo.toString();
+
+      return faceit.getPlayerStats(player_id, game).then(playerStats => {
+        const discordStatsResponse = new Discord.RichEmbed({
+          author: {
+            name: "GrinnyBot",
+            icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+          },
+          title: `Statistics for ${username}`,
+          color: 0x7289da,
+          timestamp: new Date(),
+          fields: [
+            {
+              name: "Faceit Level",
+              value: skill_level_label
             },
-            title: `Statistics for ${username}`,
-            color: 0x7289da,
-            timestamp: new Date(),
-            fields: [
-              {
-                name: "Faceit Level",
-                value: skill_level_label
-              },
-              {
-                name: "Rating",
-                value: faceitEloString
-              },
-              {
-                name: "Matches Played",
-                value: playerStats.lifetime.Matches
-              },
-              {
-                name: "Win Rate",
-                value: `${playerStats.lifetime["Win Rate %"]}%`
-              },
-              {
-                name: "Longest Win Streak",
-                value: playerStats.lifetime["Longest Win Streak"]
-              },
-              {
-                name: "K/D Ratio",
-                value: playerStats.lifetime["Average K/D Ratio"]
-              },
-              {
-                name: "Headshot %",
-                value: `${playerStats.lifetime["Average Headshots %"]}%`
-              }
-            ]
-          });
-
-          return message.channel.send(discordStatsResponse);
+            {
+              name: "Rating",
+              value: faceitEloString
+            },
+            {
+              name: "Matches Played",
+              value: playerStats.lifetime.Matches
+            },
+            {
+              name: "Win Rate",
+              value: `${playerStats.lifetime["Win Rate %"]}%`
+            },
+            {
+              name: "Longest Win Streak",
+              value: playerStats.lifetime["Longest Win Streak"]
+            },
+            {
+              name: "K/D Ratio",
+              value: playerStats.lifetime["Average K/D Ratio"]
+            },
+            {
+              name: "Headshot %",
+              value: `${playerStats.lifetime["Average Headshots %"]}%`
+            },
+            {
+              name: "Headshot %",
+              value: `${playerStats.lifetime["Average Headshots %"]}%`
+            },
+            {
+              name: "View Profile",
+              value: `https://www.faceit.com/en/players/${username}`
+            }
+          ]
         });
-      })
-      .catch(error => {
-        return message.channel.send(`\`\`\`${error}\`\`\``);
+
+        return message.channel.send(discordStatsResponse);
       });
+    });
   }
 }
 

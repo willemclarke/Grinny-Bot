@@ -5,7 +5,7 @@
 - Project was also used as a springboard to learn TypeScript
 - Also greatly improved my understanding of working with APIs to fetch data, dealing with promises and creating type interfaces
 
-- First feature was a simple weather feature so we can simply type in the chat and see eachothers weather conditions:
+- First feature was a simple weather functionality so we can simply type in the chat and see eachothers weather conditions:
 
   <p float="center">
     <img src="https://i.gyazo.com/af2e1fa5f2ca55e61a8910d91502b270.png">

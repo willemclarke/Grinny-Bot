@@ -5,16 +5,20 @@ import { weatherAPI } from "..";
 export function getWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
     return message.channel.send(
-      `\`\`\`You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require ""\`\`\``
+      `\`\`\`You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require !weather <"New York">\`\`\``
     );
   } else {
     const [cityName] = args;
 
     weatherAPI.getWeather(cityName).then(weatherDetails => {
       if (weatherDetails.cod !== 200) {
-        return message.channel.send(_.upperFirst(`\`\`\`weatherDetails.message\`\`\`` || `\`\`\`Unknown error occured\`\`\``));
+        return message.channel.send(
+          _.upperFirst(
+            `\`\`\`${weatherDetails.message} --> Make sure you're entering a correct city name!\`\`\`` ||
+              `\`\`\`Unknown error occured\`\`\``
+          )
+        );
       }
-      console.log(weatherDetails.weather[0].icon);
 
       const windSpeedKmh: number = Math.round(weatherDetails.wind.speed * 1.852);
       const weatherIcon: string = `http://openweathermap.org/img/wn/${weatherDetails.weather[0].icon}@2x.png`;

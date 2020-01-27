@@ -13,6 +13,9 @@ export function getIndividualStockData(message: Discord.Message, args: string[])
     stocksAPI
       .getStockData(symbol)
       .then(stockResponse => {
+        if (stockResponse.Message) {
+          return message.channel.send(`\`\`\`${stockResponse.Message} --> Make sure !stocks <STOCK_SYMBOL_IS_CORRECT!>\`\`\``);
+        }
         const data = stockResponse.data[0];
         const discordStocksResponse = new Discord.RichEmbed({
           author: {

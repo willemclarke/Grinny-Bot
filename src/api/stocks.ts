@@ -31,6 +31,7 @@ export interface StocksResponse {
       eps: string;
     }
   ];
+  Message: string;
 }
 
 export class StocksAPI {
