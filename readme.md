@@ -14,7 +14,7 @@
 - Second feature was to track our Counterstrike: global offensive statistics from the pugs we play using the Faceit Client:
 
   <p float="center">
-    <img src="https://i.gyazo.com/521e6f534afb31d49ad29d53bd0231a3.png">
+    <img src="https://i.gyazo.com/2e1ad75f53369a0ef9a73d2aeb0bc569.png">
   </p>
 
 - Third feature was to display stock data:
