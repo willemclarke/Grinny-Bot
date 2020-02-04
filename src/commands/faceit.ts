@@ -58,10 +58,6 @@ export function getFaceitStatistics(message: Discord.Message, args: string[]): P
               value: `${playerStats.lifetime["Average Headshots %"]}%`
             },
             {
-              name: "Headshot %",
-              value: `${playerStats.lifetime["Average Headshots %"]}%`
-            },
-            {
               name: "View Profile",
               value: `https://www.faceit.com/en/players/${username}`
             }
@@ -87,6 +83,7 @@ export function faceitUserData(message: Discord.Message) {
     getFaceitUser("csgo", "flickzy"),
     getFaceitUser("csgo", "wetstickyman"),
     getFaceitUser("csgo", "Texta"),
+    getFaceitUser("csgo", "sethleeson"),
     getFaceitUser("csgo", "treena"),
     getFaceitUser("csgo", "InfrequeNt"),
     getFaceitUser("csgo", "mswagbabyy"),

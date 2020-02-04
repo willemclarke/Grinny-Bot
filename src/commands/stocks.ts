@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import * as _ from "lodash";
-import { formatDiscordMessage, stocksAPI } from "..";
+import { stocksAPI } from "..";
 
 export function getIndividualStockData(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {

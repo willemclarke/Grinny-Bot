@@ -1,12 +1,15 @@
 import { config } from "dotenv";
 import * as Discord from "discord.js";
 import * as os from "os";
-import { getFaceitStatistics, faceitUserData } from "./commands/faceit";
-import { getWeather } from "./commands/weather";
-import { getIndividualStockData } from "./commands/stocks";
 import { Faceit } from "./api/faceit";
+import { getFaceitStatistics, faceitUserData } from "./commands/faceit";
 import { WeatherAPI } from "./api/weather";
+import { getWeather } from "./commands/weather";
 import { StocksAPI } from "./api/stocks";
+import { getIndividualStockData } from "./commands/stocks";
+import { NasaAPI } from "./api/nasa";
+import { getAstronomyPic } from "./commands/nasa";
+
 import * as _ from "lodash";
 
 config();
@@ -23,13 +26,16 @@ export const weatherAPI = new WeatherAPI(weatherToken);
 const stocksToken: string = process.env.STOCKS_TOKEN;
 export const stocksAPI = new StocksAPI(stocksToken);
 
+const nasaToken: string = process.env.NASA_TOKEN;
+export const nasaAPI = new NasaAPI(nasaToken);
+
 const pitId: string = "642229195405131776";
 const prefix: string = "!";
 
 discord.once("ready", () => {
   console.log("Ready!");
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
-  pitOfSmithChannel.send(`\`\`\`Bot has successfully started up hostname: ${os.hostname}\`\`\``);
+  pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
 
 discord.on("message", message => {
@@ -55,6 +61,8 @@ discord.on("message", message => {
     return getIndividualStockData(message, args);
   } else if (command === "graph") {
     return faceitUserData(message);
+  } else if (command === "nasa") {
+    return getAstronomyPic(message);
   }
 });
 
@@ -76,6 +84,10 @@ function displayHelpCommands(message: Discord.Message): Promise<Discord.Message 
       {
         name: "!stocks",
         value: `Stock Market Information Command: requires <!stocks STOCK_SYMBOL> e.g. <!stocks TWTR>`
+      },
+      {
+        name: "!nasa",
+        value: `NASA Astronomy Picture of the Day Command: simply requires <!nasa>`
       }
     ]
   });
