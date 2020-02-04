@@ -23,7 +23,8 @@
     <img src="https://i.gyazo.com/162746deaa096d8eabb6cfece2dbd15b.png">
   </p>
 
-  - Fourth feature utilises NASA API to display Astrological Picture of the Day:
+- Fourth feature utilises NASA API to display Astrological Picture of the Day:
+
     <p float="left">
       <img src="https://i.gyazo.com/b327ab98bbbd07920185908874d14980.png">
     </p>

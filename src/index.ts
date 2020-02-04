@@ -8,7 +8,7 @@ import { getWeather } from "./commands/weather";
 import { StocksAPI } from "./api/stocks";
 import { getIndividualStockData } from "./commands/stocks";
 import { NasaAPI } from "./api/nasa";
-import { getAstronomyPic } from "./commands/nasa";
+import { getAstronomyPic, astronomyPicInterval } from "./commands/nasa";
 
 import * as _ from "lodash";
 
@@ -30,15 +30,20 @@ const nasaToken: string = process.env.NASA_TOKEN;
 export const nasaAPI = new NasaAPI(nasaToken);
 
 const pitId: string = "642229195405131776";
+const vipId: string = "444358361098616833";
 const prefix: string = "!";
 
 discord.once("ready", () => {
-  console.log("Ready!");
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
+  const vipChannel = discord.channels.get(vipId) as Discord.TextChannel;
+  astronomyPicInterval(vipChannel);
+
+  console.log("Ready!");
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
 
 discord.on("message", message => {
+  const { channel } = <{ channel: Discord.TextChannel }>message;
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   const splitStringArgs: string[] = message.content.slice(prefix.length).split('"');
   const args: string[] = _.chain(splitStringArgs)
@@ -62,7 +67,7 @@ discord.on("message", message => {
   } else if (command === "graph") {
     return faceitUserData(message);
   } else if (command === "nasa") {
-    return getAstronomyPic(message);
+    return getAstronomyPic(channel);
   }
 });
 

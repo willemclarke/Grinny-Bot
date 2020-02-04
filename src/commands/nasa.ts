@@ -2,13 +2,12 @@ import * as Discord from "discord.js";
 import { nasaAPI } from "..";
 import * as _ from "lodash";
 
-export function getAstronomyPic(message: Discord.Message): Promise<Discord.Message | Discord.Message[]> {
+export function getAstronomyPic(channel: Discord.TextChannel): Promise<Discord.Message | Discord.Message[]> {
   return nasaAPI.getAPOTD().then(nasaResponse => {
     const { copyright, title, url, code, msg } = nasaResponse;
     if (code && code !== 200) {
-      message.channel.send(`\`\`\`${msg}\`\`\``);
+      channel.send(`\`\`\`${msg}\`\`\``);
     }
-    console.log(nasaResponse);
 
     const discordNasaResponse = new Discord.RichEmbed({
       author: {
@@ -29,6 +28,12 @@ export function getAstronomyPic(message: Discord.Message): Promise<Discord.Messa
       }
     });
 
-    return message.channel.send(discordNasaResponse);
+    return channel.send(discordNasaResponse);
   });
+}
+
+export function astronomyPicInterval(channel: Discord.TextChannel) {
+  setInterval(() => {
+    getAstronomyPic(channel);
+  }, 1000 * 60 * 60 * 24);
 }
