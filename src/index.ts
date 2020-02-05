@@ -9,6 +9,8 @@ import { StocksAPI } from "./api/stocks";
 import { getIndividualStockData } from "./commands/stocks";
 import { NasaAPI } from "./api/nasa";
 import { getAstronomyPic, astronomyPicInterval } from "./commands/nasa";
+import { UrbanAPI } from "./api/urban";
+import { getUrbanDictionaryDefinition } from "./commands/urban";
 
 import * as _ from "lodash";
 
@@ -29,6 +31,9 @@ export const stocksAPI = new StocksAPI(stocksToken);
 const nasaToken: string = process.env.NASA_TOKEN;
 export const nasaAPI = new NasaAPI(nasaToken);
 
+const urbanToken: string = process.env.URBAN_TOKEN;
+export const urbanAPI = new UrbanAPI(urbanToken);
+
 const pitId: string = "642229195405131776";
 const vipId: string = "444358361098616833";
 const prefix: string = "!";
@@ -37,7 +42,6 @@ discord.once("ready", () => {
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
   const vipChannel = discord.channels.get(vipId) as Discord.TextChannel;
   astronomyPicInterval(vipChannel);
-
   console.log("Ready!");
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
@@ -55,23 +59,25 @@ discord.on("message", message => {
   if (command === "ping") {
     message.channel.send("Pong.");
   } else if (command === "user-info") {
-    message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
+    message.channel.send(`\`\`\`Your username: ${message.author.username}\nYour ID: ${message.author.id}\`\`\``);
   } else if (command === "help") {
-    return displayHelpCommands(message);
+    return displayHelpCommands(channel);
   } else if (command === "stats") {
-    return getFaceitStatistics(message, args);
-  } else if (command === "weather") {
-    return getWeather(message, args);
-  } else if (command === "stocks") {
-    return getIndividualStockData(message, args);
+    return getFaceitStatistics(channel, args);
   } else if (command === "graph") {
-    return faceitUserData(message);
+    return faceitUserData(channel);
+  } else if (command === "weather") {
+    return getWeather(channel, args);
+  } else if (command === "stocks") {
+    return getIndividualStockData(channel, args);
   } else if (command === "nasa") {
     return getAstronomyPic(channel);
+  } else if (command === "urban") {
+    return getUrbanDictionaryDefinition(channel, args);
   }
 });
 
-function displayHelpCommands(message: Discord.Message): Promise<Discord.Message | Discord.Message[]> {
+function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Message | Discord.Message[]> {
   const listOfCommands = new Discord.RichEmbed({
     author: {
       name: "GrinnyBot",
@@ -93,11 +99,15 @@ function displayHelpCommands(message: Discord.Message): Promise<Discord.Message 
       {
         name: "!nasa",
         value: `NASA Astronomy Picture of the Day Command: simply requires <!nasa>`
+      },
+      {
+        name: "!urban",
+        value: `Urban Dictionary Command: requires <!urban WORD>, spaced words require: <!urban "SPACED WORD">`
       }
     ]
   });
 
-  return message.channel.send(listOfCommands);
+  return channel.send(listOfCommands);
 }
 
 export function formatDiscordMessage(object: object): string {

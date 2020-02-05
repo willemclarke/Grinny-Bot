@@ -2,11 +2,9 @@ import * as Discord from "discord.js";
 import * as _ from "lodash";
 import { stocksAPI } from "..";
 
-export function getIndividualStockData(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
+export function getIndividualStockData(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
-    return message.channel.send(
-      `\`\`\`You didn't provide enough arguments, requires: <!stocks STOCKSYMBOL>, e.g. <!stocks TWTR>\`\`\``
-    );
+    return channel.send(`\`\`\`You didn't provide enough arguments, requires: <!stocks STOCKSYMBOL>, e.g. <!stocks TWTR>\`\`\``);
   } else {
     const [symbol] = args;
 
@@ -14,7 +12,7 @@ export function getIndividualStockData(message: Discord.Message, args: string[])
       .getStockData(symbol)
       .then(stockResponse => {
         if (stockResponse.Message) {
-          return message.channel.send(`\`\`\`${stockResponse.Message} --> Make sure !stocks <STOCK_SYMBOL_IS_CORRECT!>\`\`\``);
+          return channel.send(`\`\`\`${stockResponse.Message} --> Make sure !stocks <STOCK_SYMBOL_IS_CORRECT!>\`\`\``);
         }
         const data = stockResponse.data[0];
         const discordStocksResponse = new Discord.RichEmbed({
@@ -73,10 +71,10 @@ export function getIndividualStockData(message: Discord.Message, args: string[])
           ]
         });
 
-        return message.channel.send(discordStocksResponse);
+        return channel.send(discordStocksResponse);
       })
       .catch(error => {
-        return message.channel.send(`\`\`\`${error}\`\`\``);
+        return channel.send(`\`\`\`${error}\`\`\``);
       });
   }
 }

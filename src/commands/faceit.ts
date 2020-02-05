@@ -2,17 +2,15 @@ import * as Discord from "discord.js";
 import { formatDiscordMessage, faceit } from "..";
 import * as _ from "lodash";
 
-export function getFaceitStatistics(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
+export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return message.channel.send(`\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``);
+    return channel.send(`\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``);
   } else {
     const [game, username] = args;
 
     faceit.getGeneralStats(game, username).then(playerDetails => {
       if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
-        return message.channel.send(
-          `\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``
-        );
+        return channel.send(`\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``);
       }
 
       const { player_id, games } = playerDetails;
@@ -64,7 +62,7 @@ export function getFaceitStatistics(message: Discord.Message, args: string[]): P
           ]
         });
 
-        return message.channel.send(discordStatsResponse);
+        return channel.send(discordStatsResponse);
       });
     });
   }
@@ -76,7 +74,7 @@ function getFaceitUser(game: string, username: string): Promise<{ username: stri
   });
 }
 
-export function faceitUserData(message: Discord.Message) {
+export function faceitUserData(channel: Discord.TextChannel) {
   const promises = [
     getFaceitUser("csgo", "m00sebreeder"),
     getFaceitUser("csgo", "street_rat"),
@@ -100,9 +98,9 @@ export function faceitUserData(message: Discord.Message) {
         {}
       );
       const formattedPlayerElos = formatDiscordMessage(playerElos);
-      return message.channel.send(`\`\`\`${formattedPlayerElos}\`\`\``);
+      return channel.send(`\`\`\`${formattedPlayerElos}\`\`\``);
     })
     .catch(error => {
-      message.channel.send(`\`\`\`${error}\`\`\``);
+      channel.send(`\`\`\`${error}\`\`\``);
     });
 }

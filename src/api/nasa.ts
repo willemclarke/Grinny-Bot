@@ -7,6 +7,7 @@ export interface NasaAPOTDResponse {
   url: string;
   code: number;
   msg: string;
+  explanation: string;
 }
 
 export class NasaAPI {

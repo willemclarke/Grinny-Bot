@@ -2,9 +2,9 @@ import * as Discord from "discord.js";
 import * as _ from "lodash";
 import { weatherAPI } from "..";
 
-export function getWeather(message: Discord.Message, args: string[]): Promise<Discord.Message | Discord.Message[]> {
+export function getWeather(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {
-    return message.channel.send(
+    return channel.send(
       `\`\`\`You didnt provide enough arguments: !weather <city_name> is required, Cities with more than one word names require !weather <"New York">\`\`\``
     );
   } else {
@@ -12,7 +12,7 @@ export function getWeather(message: Discord.Message, args: string[]): Promise<Di
 
     weatherAPI.getWeather(cityName).then(weatherDetails => {
       if (weatherDetails.cod !== 200) {
-        return message.channel.send(
+        return channel.send(
           _.upperFirst(
             `\`\`\`${weatherDetails.message} --> Make sure you're entering a correct city name!\`\`\`` ||
               `\`\`\`Unknown error occured\`\`\``
@@ -58,7 +58,7 @@ export function getWeather(message: Discord.Message, args: string[]): Promise<Di
         }
       });
 
-      return message.channel.send(discordWeatherResponse);
+      return channel.send(discordWeatherResponse);
     });
   }
 }
