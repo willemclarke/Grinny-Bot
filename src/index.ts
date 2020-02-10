@@ -11,6 +11,8 @@ import { NasaAPI } from "./api/nasa";
 import { getAstronomyPic, astronomyPicInterval } from "./commands/nasa";
 import { UrbanAPI } from "./api/urban";
 import { getUrbanDictionaryDefinition } from "./commands/urban";
+import { IMDBAPI } from "./api/imdb";
+import { getImdbInfo } from "./commands/imdb";
 
 import * as _ from "lodash";
 
@@ -33,6 +35,9 @@ export const nasaAPI = new NasaAPI(nasaToken);
 
 const urbanToken: string = process.env.URBAN_TOKEN;
 export const urbanAPI = new UrbanAPI(urbanToken);
+
+const imdbToken: string = process.env.IMDB_TOKEN;
+export const imdbAPI = new IMDBAPI(imdbToken);
 
 const pitId: string = "642229195405131776";
 const vipId: string = "444358361098616833";
@@ -74,6 +79,8 @@ discord.on("message", message => {
     return getAstronomyPic(channel);
   } else if (command === "urban") {
     return getUrbanDictionaryDefinition(channel, args);
+  } else if (command === "imdb") {
+    return getImdbInfo(channel, args);
   }
 });
 
@@ -103,6 +110,10 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
       {
         name: "!urban",
         value: `Urban Dictionary Command: requires <!urban WORD>, spaced words require: <!urban "SPACED WORD">`
+      },
+      {
+        name: "!imdb",
+        value: `IMDB Movie/series Information Command: requires <!urban Movie>, spaced words require: <!urban "Spaced Movie/Series">`
       }
     ]
   });

@@ -25,7 +25,6 @@ export function getUrbanDictionaryDefinition(
           length: 1024,
           omission: "[...]"
         });
-        console.log(trimDefnition);
 
         const discordUrbanResponse = new Discord.RichEmbed({
           author: {

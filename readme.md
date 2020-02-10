@@ -17,25 +17,31 @@
     <img src="https://i.gyazo.com/be1ef1ccc169f2226159d25e1ac7f7e4.png">
   </p>
 
-- Third feature was to display stock data:
-
-  <p float="left">
-    <img src="https://i.gyazo.com/162746deaa096d8eabb6cfece2dbd15b.png">
-  </p>
-
-- Fourth feature utilises NASA API to display Astronomy Picture of the Day:
+- Third feature utilises IMDB Api to display movie/series information via discord:
 
     <p float="left">
-      <img src="https://i.gyazo.com/b327ab98bbbd07920185908874d14980.png">
+      <img src="https://i.gyazo.com/8276d2a6ae62d6e0769fc4e086f93285.png">
+    </p>
+
+- Fourth feature utilises NASA API to display Astronomy Picture of the Day - Posted by the bot automatically every 24hrs, and by user request (!nasa):
+
+    <p float="left">
+      <img src="https://i.gyazo.com/cedf7be3708a90b20a094d5adcc7c2b1.png">
     </p>
 
 - Fifth feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
 
     <p float="left">
-      <img src="https://i.gyazo.com/9af2abba0371bb6778e88ddffd7f2d29.png">
+      <img src="https://i.gyazo.com/00250ef06bb902bcec47ad88eaa6b38b.png">
     </p>
 
-- Simple help command to show all existing commands:
+- Sixth feature was to display stock data:
+
+  <p float="left">
+    <img src="https://i.gyazo.com/162746deaa096d8eabb6cfece2dbd15b.png">
+  </p>
+
+* Lastly, simple help command to show all existing commands:
   <p float="left">
     <img src="https://i.gyazo.com/7d44a3e9085df8d1af184b55c7edd8c8.png">
   </p>
