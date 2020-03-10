@@ -13,6 +13,8 @@ import { UrbanAPI } from "./api/urban";
 import { getUrbanDictionaryDefinition } from "./commands/urban";
 import { IMDBAPI } from "./api/imdb";
 import { getImdbInfo } from "./commands/imdb";
+import { MediumType } from "./api/myanimelist";
+import { getAnimeAndMangaInfo } from "./commands/myanimelist";
 
 import * as _ from "lodash";
 
@@ -81,6 +83,10 @@ discord.on("message", message => {
     return getUrbanDictionaryDefinition(channel, args);
   } else if (command === "imdb") {
     return getImdbInfo(channel, args);
+  } else if (command === MediumType.anime) {
+    return getAnimeAndMangaInfo(channel, MediumType.anime, args);
+  } else if (command === MediumType.manga) {
+    return getAnimeAndMangaInfo(channel, MediumType.manga, args);
   }
 });
 

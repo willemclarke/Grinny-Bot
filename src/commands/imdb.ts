@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
-import { imdbAPI } from "..";
 import * as _ from "lodash";
+import { imdbAPI } from "..";
 
 export function getImdbInfo(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (!args.length) {

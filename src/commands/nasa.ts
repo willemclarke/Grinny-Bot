@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
-import { nasaAPI } from "..";
 import * as _ from "lodash";
+import { nasaAPI } from "..";
 
 export function getAstronomyPic(channel: Discord.TextChannel): Promise<Discord.Message | Discord.Message[]> {
   return nasaAPI.getAPOTD().then(nasaResponse => {
