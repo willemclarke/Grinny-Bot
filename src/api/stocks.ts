@@ -1,4 +1,4 @@
-import * as request from "request";
+import request from "request";
 
 export interface StocksResponse {
   symbols_requested: number;

@@ -1,4 +1,4 @@
-import * as request from "request";
+import request from "request";
 
 export interface FaceitBasicResponse {
   player_id: string;

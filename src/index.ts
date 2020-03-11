@@ -1,6 +1,6 @@
-import { config } from "dotenv";
-import * as Discord from "discord.js";
-import * as os from "os";
+import Discord from "discord.js";
+import os from "os";
+import _ from "lodash";
 import { Faceit } from "./api/faceit";
 import { getFaceitStatistics, faceitUserData } from "./commands/faceit";
 import { WeatherAPI } from "./api/weather";
@@ -13,31 +13,18 @@ import { UrbanAPI } from "./api/urban";
 import { getUrbanDictionaryDefinition } from "./commands/urban";
 import { IMDBAPI } from "./api/imdb";
 import { getImdbInfo } from "./commands/imdb";
+import { getAnimeInfo, getMangaInfo } from "./commands/myanimelist";
+import { fromEnv, Config } from "./config";
 
-import * as _ from "lodash";
-
-config();
-
-const discordToken: string = process.env.DISCORD_TOKEN;
+const config: Config = fromEnv();
 const discord = new Discord.Client();
 
-const faceitToken: string = process.env.FACEIT_TOKEN;
-export const faceit = new Faceit(faceitToken);
-
-const weatherToken: string = process.env.WEATHER_TOKEN;
-export const weatherAPI = new WeatherAPI(weatherToken);
-
-const stocksToken: string = process.env.STOCKS_TOKEN;
-export const stocksAPI = new StocksAPI(stocksToken);
-
-const nasaToken: string = process.env.NASA_TOKEN;
-export const nasaAPI = new NasaAPI(nasaToken);
-
-const urbanToken: string = process.env.URBAN_TOKEN;
-export const urbanAPI = new UrbanAPI(urbanToken);
-
-const imdbToken: string = process.env.IMDB_TOKEN;
-export const imdbAPI = new IMDBAPI(imdbToken);
+export const faceit = new Faceit(config.faceitToken);
+export const weatherAPI = new WeatherAPI(config.weatherToken);
+export const stocksAPI = new StocksAPI(config.stocksToken);
+export const nasaAPI = new NasaAPI(config.nasaToken);
+export const urbanAPI = new UrbanAPI(config.urbanToken);
+export const imdbAPI = new IMDBAPI(config.imdbToken);
 
 const pitId: string = "642229195405131776";
 const vipId: string = "444358361098616833";
@@ -46,25 +33,35 @@ const prefix: string = "!";
 discord.once("ready", () => {
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
   const vipChannel = discord.channels.get(vipId) as Discord.TextChannel;
+
   astronomyPicInterval(vipChannel);
+  // graphStats(MediumType.manga, 2);
+
   console.log("Ready!");
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
 
 discord.on("message", message => {
-  const { channel } = <{ channel: Discord.TextChannel }>message;
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
-  const splitStringArgs: string[] = message.content.slice(prefix.length).split('"');
+  const { channel, content, author } = <{ channel: Discord.TextChannel; content: string; author: Discord.User }>message;
+
+  if (!content.startsWith(prefix) || author.bot) {
+    return;
+  }
+
+  const splitStringArgs: string[] = content.slice(prefix.length).split('"');
   const args: string[] = _.chain(splitStringArgs)
     .flatMap((arg, index) => (index === 0 ? arg.split(" ") : arg))
     .compact()
     .value();
-  const command: string = args.shift().toLowerCase();
+
+  const command: string | undefined = args?.shift()?.toLowerCase();
+
+  if (!command) {
+    return channel.send("Not a valid command!");
+  }
 
   if (command === "ping") {
-    message.channel.send("Pong.");
-  } else if (command === "user-info") {
-    message.channel.send(`\`\`\`Your username: ${message.author.username}\nYour ID: ${message.author.id}\`\`\``);
+    channel.send("Pong.");
   } else if (command === "help") {
     return displayHelpCommands(channel);
   } else if (command === "stats") {
@@ -81,6 +78,10 @@ discord.on("message", message => {
     return getUrbanDictionaryDefinition(channel, args);
   } else if (command === "imdb") {
     return getImdbInfo(channel, args);
+  } else if (command === "anime") {
+    return getAnimeInfo(channel, args);
+  } else if (command === "manga") {
+    return getMangaInfo(channel, args);
   }
 });
 
@@ -114,6 +115,10 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
       {
         name: "!imdb",
         value: `IMDB Movie/series Information Command: requires <!urban Movie>, spaced words require: <!urban "Spaced Movie/Series">`
+      },
+      {
+        name: "!anime & !manga",
+        value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title> <!manga title>, spaced titles require: <!anime "spaced title name">`
       }
     ]
   });
@@ -122,7 +127,7 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
 }
 
 export function formatDiscordMessage(object: object): string {
-  return _.reduce(object, (acc, value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
+  return _.reduce(object, (acc: string[], value, key) => _.concat(acc, `${key}: ${value}`), []).join("\n");
 }
 
-discord.login(discordToken);
+discord.login(config.discordToken);

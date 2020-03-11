@@ -1,6 +1,6 @@
-import * as Discord from "discord.js";
+import Discord from "discord.js";
+import _ from "lodash";
 import { formatDiscordMessage, faceit } from "..";
-import * as _ from "lodash";
 
 export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
@@ -8,7 +8,7 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
   } else {
     const [game, username] = args;
 
-    faceit.getGeneralStats(game, username).then(playerDetails => {
+    return faceit.getGeneralStats(game, username).then(playerDetails => {
       if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
         return channel.send(`\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``);
       }
@@ -24,6 +24,7 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
             icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
           },
           title: `Statistics for ${username}`,
+          url: `https://www.faceit.com/en/players/${username}`,
           color: 0x7289da,
           timestamp: new Date(),
           fields: [
@@ -54,10 +55,6 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
             {
               name: "Headshot %",
               value: `${playerStats.lifetime["Average Headshots %"]}%`
-            },
-            {
-              name: "View Profile",
-              value: `https://www.faceit.com/en/players/${username}`
             }
           ]
         });
