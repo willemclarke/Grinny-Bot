@@ -1,4 +1,4 @@
-import * as request from "request";
+import request from "request";
 
 export interface UrbanApiResponse {
   list: [
@@ -15,9 +15,9 @@ export interface UrbanApiResponse {
 }
 
 export class UrbanAPI {
-  token: string;
+  token: string | undefined;
 
-  constructor(token: string) {
+  constructor(token: string | undefined) {
     this.token = token;
   }
 

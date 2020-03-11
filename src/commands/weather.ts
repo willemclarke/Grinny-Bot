@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
+import Discord from "discord.js";
+import _ from "lodash";
 import { weatherAPI } from "..";
 
 export function getWeather(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
@@ -10,7 +10,7 @@ export function getWeather(channel: Discord.TextChannel, args: string[]): Promis
   } else {
     const [cityName] = args;
 
-    weatherAPI.getWeather(cityName).then(weatherDetails => {
+    return weatherAPI.getWeather(cityName).then(weatherDetails => {
       if (weatherDetails.cod !== 200) {
         return channel.send(
           _.upperFirst(
@@ -37,10 +37,6 @@ export function getWeather(channel: Discord.TextChannel, args: string[]): Promis
             value: `${Math.round(weatherDetails.main.temp)}°C`
           },
           {
-            name: "Weather Conditions",
-            value: _.upperFirst(weatherDetails.weather[0]["description"])
-          },
-          {
             name: "Minimum Temperature",
             value: `${Math.round(weatherDetails.main.temp_min)}°C`
           },
@@ -51,6 +47,10 @@ export function getWeather(channel: Discord.TextChannel, args: string[]): Promis
           {
             name: "Wind Speed",
             value: `${windSpeedKmh} Km/h`
+          },
+          {
+            name: "Weather Conditions",
+            value: _.upperFirst(weatherDetails.weather[0]["description"])
           }
         ],
         image: {

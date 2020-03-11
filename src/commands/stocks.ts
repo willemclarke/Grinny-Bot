@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
+import Discord from "discord.js";
+import _ from "lodash";
 import { stocksAPI } from "..";
 
 export function getIndividualStockData(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
@@ -8,7 +8,7 @@ export function getIndividualStockData(channel: Discord.TextChannel, args: strin
   } else {
     const [symbol] = args;
 
-    stocksAPI
+    return stocksAPI
       .getStockData(symbol)
       .then(stockResponse => {
         if (stockResponse.Message) {

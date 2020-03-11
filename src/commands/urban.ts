@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
+import Discord from "discord.js";
+import _ from "lodash";
 import { urbanAPI } from "..";
 
 export function getUrbanDictionaryDefinition(
@@ -13,7 +13,7 @@ export function getUrbanDictionaryDefinition(
   } else {
     const [term] = args;
 
-    urbanAPI
+    return urbanAPI
       .getUrbanDictionary(term)
       .then(urbanResponse => {
         const { word, definition, example, author, written_on, permalink, thumbs_up } = urbanResponse.list[0];

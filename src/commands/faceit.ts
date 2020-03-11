@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
+import Discord from "discord.js";
+import _ from "lodash";
 import { formatDiscordMessage, faceit } from "..";
 
 export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
@@ -8,7 +8,7 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
   } else {
     const [game, username] = args;
 
-    faceit.getGeneralStats(game, username).then(playerDetails => {
+    return faceit.getGeneralStats(game, username).then(playerDetails => {
       if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
         return channel.send(`\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``);
       }

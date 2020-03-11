@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
+import Discord from "discord.js";
+import _ from "lodash";
 import { nasaAPI } from "..";
 
 export function getAstronomyPic(channel: Discord.TextChannel): Promise<Discord.Message | Discord.Message[]> {

@@ -1,13 +1,13 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
-import { getAnimeManga, MediumType } from "../api/myanimelist";
+import Discord from "discord.js";
+import _ from "lodash";
+import { getAnimeManga, getAnimeMangaStats, MediumType } from "../api/myanimelist";
 
 interface Field {
   name: string;
   value: string;
 }
 
-export function getAnimeAndMangaInfo(
+export async function getAnimeAndMangaInfo(
   channel: Discord.TextChannel,
   command: MediumType,
   args: string[]
@@ -19,7 +19,7 @@ export function getAnimeAndMangaInfo(
   } else {
     const [title] = args;
 
-    getAnimeManga(command, title)
+    return getAnimeManga(command, title)
       .then(myAnimeListResponse => {
         const {
           mal_id,
@@ -34,7 +34,7 @@ export function getAnimeAndMangaInfo(
           score,
           airing,
           publishing
-        } = myAnimeListResponse.results[0];
+        } = myAnimeListResponse;
 
         const formattedAiringStatus: Field =
           command === MediumType.anime && airing === false
@@ -84,8 +84,15 @@ export function getAnimeAndMangaInfo(
 
         return channel.send(discordAnimeMangaResponse);
       })
+
       .catch(error => {
-        return channel.send(`\`\`\`${error}\`\`\``);
+        return channel.send(`\`\`\`${error} --> Please ensure anime/manga you're searching\`\`\``);
       });
   }
+}
+
+export function graphStats(type: MediumType, mal_id: number) {
+  getAnimeMangaStats(MediumType.manga, 2).then(statsResponse => {
+    console.log(statsResponse);
+  });
 }

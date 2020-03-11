@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as _ from "lodash";
+import Discord from "discord.js";
+import _ from "lodash";
 import { imdbAPI } from "..";
 
 export function getImdbInfo(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
@@ -10,7 +10,7 @@ export function getImdbInfo(channel: Discord.TextChannel, args: string[]): Promi
   } else {
     const [title] = args;
 
-    imdbAPI.getImdbData(title).then(imdbResponse => {
+    return imdbAPI.getImdbData(title).then(imdbResponse => {
       const {
         Title,
         Rated,

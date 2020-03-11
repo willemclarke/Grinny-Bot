@@ -1,4 +1,4 @@
-import * as request from "request";
+import request from "request";
 
 export interface ImdbResponse {
   Title: string;
@@ -21,9 +21,9 @@ export interface ImdbResponse {
 }
 
 export class IMDBAPI {
-  token: string;
+  token: string | undefined;
 
-  constructor(token: string) {
+  constructor(token: string | undefined) {
     this.token = token;
   }
 
