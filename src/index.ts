@@ -13,8 +13,7 @@ import { UrbanAPI } from "./api/urban";
 import { getUrbanDictionaryDefinition } from "./commands/urban";
 import { IMDBAPI } from "./api/imdb";
 import { getImdbInfo } from "./commands/imdb";
-import { MediumType } from "./api/myanimelist";
-import { getAnimeAndMangaInfo, graphStats } from "./commands/myanimelist";
+import { getAnimeInfo, getMangaInfo } from "./commands/myanimelist";
 import { fromEnv, Config } from "./config";
 
 const config: Config = fromEnv();
@@ -79,10 +78,10 @@ discord.on("message", message => {
     return getUrbanDictionaryDefinition(channel, args);
   } else if (command === "imdb") {
     return getImdbInfo(channel, args);
-  } else if (command in MediumType) {
-    return getAnimeAndMangaInfo(channel, MediumType.anime, args);
-  } else if (command in MediumType) {
-    return getAnimeAndMangaInfo(channel, MediumType.manga, args);
+  } else if (command === "anime") {
+    return getAnimeInfo(channel, args);
+  } else if (command === "manga") {
+    return getMangaInfo(channel, args);
   }
 });
 
@@ -119,7 +118,7 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
       },
       {
         name: "!anime & !manga",
-        value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title <!manga title>, spaced titles require: <!anime "spaced title name">`
+        value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title> <!manga title>, spaced titles require: <!anime "spaced title name">`
       }
     ]
   });
