@@ -11,9 +11,9 @@ export interface NasaAPOTDResponse {
 }
 
 export class NasaAPI {
-  token: string | undefined;
+  token: string;
 
-  constructor(token: string | undefined) {
+  constructor(token: string) {
     this.token = token;
   }
 

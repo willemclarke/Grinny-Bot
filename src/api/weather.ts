@@ -25,9 +25,9 @@ export interface WeatherResponse {
 }
 
 export class WeatherAPI {
-  token: string | undefined;
+  token: string;
 
-  constructor(token: string | undefined) {
+  constructor(token: string) {
     this.token = token;
   }
 

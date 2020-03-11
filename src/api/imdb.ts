@@ -21,9 +21,9 @@ export interface ImdbResponse {
 }
 
 export class IMDBAPI {
-  token: string | undefined;
+  token: string;
 
-  constructor(token: string | undefined) {
+  constructor(token: string) {
     this.token = token;
   }
 

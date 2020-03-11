@@ -35,9 +35,9 @@ export interface StocksResponse {
 }
 
 export class StocksAPI {
-  token: string | undefined;
+  token: string;
 
-  constructor(token: string | undefined) {
+  constructor(token: string) {
     this.token = token;
   }
 

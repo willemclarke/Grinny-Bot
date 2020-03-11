@@ -15,9 +15,9 @@ export interface UrbanApiResponse {
 }
 
 export class UrbanAPI {
-  token: string | undefined;
+  token: string;
 
-  constructor(token: string | undefined) {
+  constructor(token: string) {
     this.token = token;
   }
 
