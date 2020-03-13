@@ -15,6 +15,7 @@ import { IMDBAPI } from "./api/imdb";
 import { getImdbInfo } from "./commands/imdb";
 import { getAnimeInfo, getMangaInfo } from "./commands/myanimelist";
 import { fromEnv, Config } from "./config";
+import { Plotly } from "./api/plotly";
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
@@ -25,6 +26,7 @@ export const stocksAPI = new StocksAPI(config.stocksToken);
 export const nasaAPI = new NasaAPI(config.nasaToken);
 export const urbanAPI = new UrbanAPI(config.urbanToken);
 export const imdbAPI = new IMDBAPI(config.imdbToken);
+export const plotly = new Plotly(config.plotlyUsername, config.plotlyToken);
 
 const pitId: string = "642229195405131776";
 const vipId: string = "444358361098616833";
@@ -35,7 +37,6 @@ discord.once("ready", () => {
   const vipChannel = discord.channels.get(vipId) as Discord.TextChannel;
 
   astronomyPicInterval(vipChannel);
-  // graphStats(MediumType.manga, 2);
 
   console.log("Ready!");
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);

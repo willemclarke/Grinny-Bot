@@ -10,6 +10,8 @@ export interface Config {
   nasaToken: string;
   imdbToken: string;
   urbanToken: string;
+  plotlyToken: string;
+  plotlyUsername: string;
 }
 
 export function getEnv(value: string) {
@@ -29,6 +31,8 @@ export const fromEnv = (): Config => {
     stocksToken: getEnv("STOCKS_TOKEN"),
     nasaToken: getEnv("NASA_TOKEN"),
     imdbToken: getEnv("IMDB_TOKEN"),
-    urbanToken: getEnv("URBAN_TOKEN")
+    urbanToken: getEnv("URBAN_TOKEN"),
+    plotlyToken: getEnv("PLOTLY_TOKEN"),
+    plotlyUsername: getEnv("PLOTLY_USERNAME")
   };
 };
