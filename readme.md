@@ -32,7 +32,7 @@
 - Fifth feature utilises the JIKAN (unoffical MyAnimeList API) to display anime and manga data to the user. This command was interesting to make as I got to utilise the [plotly](https://plot.ly/nodejs/getting-started/#getting-started-with-plotly-for-nodejs) graphing library to display user rating statistics for each anime/manga.
 
     <p float="left">
-      <img src="https://i.gyazo.com/2046295031b19cc8c38fb7bbc7e6b82c.png">
+      <img src="https://i.gyazo.com/a96073e8692bfdbc444aced9e8671398.png">
     </p>
 
 - Sixth feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
