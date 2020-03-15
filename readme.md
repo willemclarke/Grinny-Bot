@@ -8,13 +8,13 @@
 - First feature was a simple weather functionality so we can simply type in the chat and see eachothers weather conditions:
 
   <p float="left">
-    <img src="https://i.gyazo.com/af2e1fa5f2ca55e61a8910d91502b270.png">
+    <img src="https://i.gyazo.com/2046295031b19cc8c38fb7bbc7e6b82c.png">
   </p>
 
 - Second feature was to track our Counterstrike: global offensive statistics from the pugs we play using the Faceit Client and API:
 
   <p float="left">
-    <img src="https://i.gyazo.com/be1ef1ccc169f2226159d25e1ac7f7e4.png">
+    <img src="https://i.gyazo.com/376ae5c058a4ca7d422051046e940688.png">
   </p>
 
 - Third feature utilises IMDB Api to display movie/series information via discord:
@@ -29,13 +29,19 @@
       <img src="https://i.gyazo.com/cedf7be3708a90b20a094d5adcc7c2b1.png">
     </p>
 
-- Fifth feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
+- Fifth feature utilises the JIKAN (unoffical MyAnimeList API) to display anime and manga data to the user. This command was interesting to make as I got to utilise the [plotly](https://plot.ly/nodejs/getting-started/#getting-started-with-plotly-for-nodejs) graphing library to display user rating statistics for each anime/manga.
+
+    <p float="left">
+      <img src="https://i.gyazo.com/a96073e8692bfdbc444aced9e8671398.png">
+    </p>
+
+- Sixth feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
 
     <p float="left">
       <img src="https://i.gyazo.com/00250ef06bb902bcec47ad88eaa6b38b.png">
     </p>
 
-- Sixth feature was to display stock data:
+- Seventh feature was to display stock data:
 
   <p float="left">
     <img src="https://i.gyazo.com/162746deaa096d8eabb6cfece2dbd15b.png">
