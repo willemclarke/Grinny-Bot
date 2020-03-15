@@ -47,6 +47,7 @@ export class Plotly {
         });
       } catch (err) {
         console.log(err);
+        return err;
       }
     });
   }
@@ -56,7 +57,7 @@ export class Plotly {
       fs.unlink(path, err => {
         if (err) {
           console.log(err);
-          reject();
+          reject(err);
         }
         resolve();
       });

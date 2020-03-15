@@ -4,7 +4,6 @@ import { plotly } from "../index";
 
 import { getAnime, getManga, getAnimeStats, getMangaStats } from "../api/myanimelist";
 import { randomString } from "../utils";
-import { parse } from "path";
 
 export async function getAnimeInfo(channel: Discord.TextChannel, args: string[]): Promise<void> {
   try {
@@ -21,7 +20,7 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
 
       const animeStats = await getAnimeStats(mal_id);
       const xAxis = _.map(Object.keys(animeStats), key => {
-        return parseInt(key);
+        return _.parseInt(key);
       });
       const yAxis = _.map(animeStats, anime => {
         return anime.votes;
@@ -36,7 +35,7 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
 
       const imgOpts = {
         format: "jpeg",
-        width: 800,
+        width: 900,
         height: 500
       };
 
@@ -112,7 +111,7 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
 
       const mangaStats = await getMangaStats(mal_id);
       const xAxis = _.map(Object.keys(mangaStats), key => {
-        return parseInt(key);
+        return _.parseInt(key);
       });
       const yAxis = _.map(mangaStats, manga => {
         return manga.votes;
@@ -127,7 +126,7 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
 
       const imgOpts = {
         format: "jpeg",
-        width: 800,
+        width: 900,
         height: 500
       };
 

@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "discord.js": "^11.5.1",
-    "fs": "0.0.1-security",
     "lodash": "^4.17.15",
     "plotly": "^1.0.6",
     "request": "^2.88.0",
