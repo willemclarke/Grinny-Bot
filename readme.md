@@ -49,5 +49,5 @@
 
 * Lastly, simple help command to show all existing commands:
   <p float="left">
-    <img src="https://i.gyazo.com/7d44a3e9085df8d1af184b55c7edd8c8.png">
+    <img src="https://i.gyazo.com/6f04a132c8c1ee36964c437e3689f899.png">
   </p>
