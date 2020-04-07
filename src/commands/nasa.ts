@@ -2,9 +2,9 @@ import Discord from "discord.js";
 import _ from "lodash";
 import { nasaAPI } from "..";
 
-export function getAstronomyPic(channel: Discord.TextChannel): Promise<Discord.Message | Discord.Message[]> {
+export function getAstronomyPic(channel: Discord.TextChannel): Promise<void | Discord.Message | Discord.Message[]> {
   return nasaAPI.getAPOTD().then(nasaResponse => {
-    const { copyright, title, url, code, msg, explanation } = nasaResponse;
+    const { copyright, title, url, code, msg, explanation, media_type } = nasaResponse;
     if (code && code !== 200) {
       channel.send(`\`\`\`${msg}\`\`\``);
     }

@@ -8,7 +8,7 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
   } else {
     const [game, username] = args;
 
-    return faceit.getGeneralStats(game, username).then(playerDetails => {
+    return faceit.getGeneralStats(game, username).then((playerDetails) => {
       if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
         return channel.send(`\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``);
       }
@@ -17,11 +17,11 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
       const { skill_level_label, faceit_elo } = games.csgo;
       const faceitEloString = faceit_elo.toString();
 
-      return faceit.getPlayerStats(player_id, game).then(playerStats => {
+      return faceit.getPlayerStats(player_id, game).then((playerStats) => {
         const discordStatsResponse = new Discord.RichEmbed({
           author: {
             name: "GrinnyBot",
-            icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+            icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
           },
           title: `Statistics for ${username}`,
           url: `https://www.faceit.com/en/players/${username}`,
@@ -30,33 +30,33 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
           fields: [
             {
               name: "Faceit Level",
-              value: skill_level_label
+              value: skill_level_label,
             },
             {
               name: "Rating",
-              value: faceitEloString
+              value: faceitEloString,
             },
             {
               name: "Matches Played",
-              value: playerStats.lifetime.Matches
+              value: playerStats.lifetime.Matches,
             },
             {
               name: "Win Rate",
-              value: `${playerStats.lifetime["Win Rate %"]}%`
+              value: `${playerStats.lifetime["Win Rate %"]}%`,
             },
             {
               name: "Longest Win Streak",
-              value: playerStats.lifetime["Longest Win Streak"]
+              value: playerStats.lifetime["Longest Win Streak"],
             },
             {
               name: "K/D Ratio",
-              value: playerStats.lifetime["Average K/D Ratio"]
+              value: playerStats.lifetime["Average K/D Ratio"],
             },
             {
               name: "Headshot %",
-              value: `${playerStats.lifetime["Average Headshots %"]}%`
-            }
-          ]
+              value: `${playerStats.lifetime["Average Headshots %"]}%`,
+            },
+          ],
         });
 
         return channel.send(discordStatsResponse);
@@ -66,7 +66,7 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
 }
 
 function getFaceitUser(game: string, username: string): Promise<{ username: string; rating: number }> {
-  return faceit.getGeneralStats(game, username).then(playerDetails => {
+  return faceit.getGeneralStats(game, username).then((playerDetails) => {
     return { username: playerDetails.nickname, rating: playerDetails.games.csgo.faceit_elo };
   });
 }
@@ -76,17 +76,17 @@ export function faceitUserData(channel: Discord.TextChannel) {
     getFaceitUser("csgo", "m00sebreeder"),
     getFaceitUser("csgo", "street_rat"),
     getFaceitUser("csgo", "flickzy"),
-    getFaceitUser("csgo", "wetstickyman"),
+    getFaceitUser("csgo", "donaldo_desu"),
     getFaceitUser("csgo", "Texta"),
     getFaceitUser("csgo", "sethleeson"),
     getFaceitUser("csgo", "treena"),
     getFaceitUser("csgo", "InfrequeNt"),
     getFaceitUser("csgo", "mswagbabyy"),
-    getFaceitUser("csgo", "dbousamra")
+    getFaceitUser("csgo", "dbousamra"),
   ];
 
   return Promise.all(promises)
-    .then(users => {
+    .then((users) => {
       const playerElos = _.reduce(
         users,
         (acc, user) => {
@@ -97,7 +97,7 @@ export function faceitUserData(channel: Discord.TextChannel) {
       const formattedPlayerElos = formatDiscordMessage(playerElos);
       return channel.send(`\`\`\`${formattedPlayerElos}\`\`\``);
     })
-    .catch(error => {
+    .catch((error) => {
       channel.send(`\`\`\`${error}\`\`\``);
     });
 }

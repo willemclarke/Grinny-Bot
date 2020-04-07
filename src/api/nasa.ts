@@ -8,6 +8,7 @@ export interface NasaAPOTDResponse {
   code: number;
   msg: string;
   explanation: string;
+  media_type: string;
 }
 
 export class NasaAPI {
