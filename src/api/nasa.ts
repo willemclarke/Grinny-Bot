@@ -8,7 +8,6 @@ export interface NasaAPOTDResponse {
   code: number;
   msg: string;
   explanation: string;
-  media_type: string;
 }
 
 export class NasaAPI {
@@ -21,7 +20,7 @@ export class NasaAPI {
   getAPOTD(): Promise<NasaAPOTDResponse> {
     return new Promise((resolve, reject) => {
       const options = {
-        url: `https://api.nasa.gov/planetary/apod?api_key=${this.token}`
+        url: `https://api.nasa.gov/planetary/apod?api_key=${this.token}`,
       };
 
       request(options, (error, response, body) => {

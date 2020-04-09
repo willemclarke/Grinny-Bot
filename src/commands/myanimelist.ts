@@ -19,33 +19,36 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
       const formattedAiring = airing === false ? "Finished Airing" : "Currently Airing";
 
       const animeStats = await getAnimeStats(mal_id);
-      const xAxis = _.map(Object.keys(animeStats), key => {
+      const xAxis = _.map(Object.keys(animeStats), (key) => {
         return _.parseInt(key);
       });
-      const yAxis = _.map(animeStats, anime => {
+      const yAxis = _.map(animeStats, (anime) => {
         return anime.votes;
       });
 
       const layout = {
         title: `Vote distribution for ${title}`,
         yaxis: {
-          title: "Number of Votes"
-        }
+          title: "Number of Votes",
+        },
+        font: {
+          size: 20,
+        },
       };
 
       const imgOpts = {
-        format: "jpeg",
+        format: "png",
         width: 900,
-        height: 500
+        height: 500,
       };
 
       const data = {
         x: xAxis,
         y: yAxis,
-        type: "bar"
+        type: "bar",
       };
 
-      const fileName = `${randomString(16)}.jpeg`;
+      const fileName = `${randomString(16)}.png`;
       await plotly.createGraph(data, layout, imgOpts, fileName);
 
       const discordAnimeResponse = new Discord.RichEmbed({
@@ -53,39 +56,39 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
         timestamp: new Date(),
         author: {
           name: "GrinnyBot",
-          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
         },
         title: `MyAnimeList Information for ${title} (${type}) `,
         url,
         thumbnail: {
-          url: image_url
+          url: image_url,
         },
         image: {
-          url: `attachment://${fileName}`
+          url: `attachment://${fileName}`,
         },
         fields: [
           {
             name: "**Score**",
-            value: `Rated **${score}** by **${members}** members`
+            value: `Rated **${score}** by **${members}** members`,
           },
           {
             name: "**Synopsis**",
-            value: `${synopsis}`
+            value: `${synopsis}`,
           },
           {
             name: "**Status**",
-            value: `${formattedAiring}`
+            value: `${formattedAiring}`,
           },
           {
             name: "**Episodes**",
-            value: `${formattedEpisodes}`
-          }
-        ]
+            value: `${formattedEpisodes}`,
+          },
+        ],
       });
 
       await channel.send({
         embed: discordAnimeResponse,
-        files: [{ attachment: fileName, name: fileName }]
+        files: [{ attachment: fileName, name: fileName }],
       });
 
       plotly.deleteFile(fileName);
@@ -110,33 +113,36 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
       const formattedVolumes = volumes === 0 ? "Unknown Volumes" : `${volumes}`;
 
       const mangaStats = await getMangaStats(mal_id);
-      const xAxis = _.map(Object.keys(mangaStats), key => {
+      const xAxis = _.map(Object.keys(mangaStats), (key) => {
         return _.parseInt(key);
       });
-      const yAxis = _.map(mangaStats, manga => {
+      const yAxis = _.map(mangaStats, (manga) => {
         return manga.votes;
       });
 
       const layout = {
         title: `Vote distribution for ${title}`,
         yaxis: {
-          title: `Number of votes`
-        }
+          title: `Number of votes`,
+        },
+        font: {
+          size: 20,
+        },
       };
 
       const imgOpts = {
-        format: "jpeg",
+        format: "png",
         width: 900,
-        height: 500
+        height: 500,
       };
 
       const data = {
         x: xAxis,
         y: yAxis,
-        type: "bar"
+        type: "bar",
       };
 
-      const fileName = `${randomString(16)}.jpeg`;
+      const fileName = `${randomString(16)}.png`;
       await plotly.createGraph(data, layout, imgOpts, fileName);
 
       const discordMangaResponse = new Discord.RichEmbed({
@@ -144,43 +150,43 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
         timestamp: new Date(),
         author: {
           name: "GrinnyBot",
-          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
         },
         title: `MyAnimeList Information for ${title} (${type}) `,
         url,
         thumbnail: {
-          url: image_url
+          url: image_url,
         },
         image: {
-          url: `attachment://${fileName}`
+          url: `attachment://${fileName}`,
         },
         fields: [
           {
             name: "**Score**",
-            value: `Rated **${score}** by **${members}** members`
+            value: `Rated **${score}** by **${members}** members`,
           },
           {
             name: "**Synopsis**",
-            value: `${synopsis}`
+            value: `${synopsis}`,
           },
           {
             name: "**Status**",
-            value: `${formattedPublishing}`
+            value: `${formattedPublishing}`,
           },
           {
             name: "**Volumes**",
-            value: `${formattedVolumes}`
+            value: `${formattedVolumes}`,
           },
           {
             name: "**Chapters**",
-            value: `${formattedChapters}`
-          }
-        ]
+            value: `${formattedChapters}`,
+          },
+        ],
       });
 
       await channel.send({
         embed: discordMangaResponse,
-        files: [{ attachment: fileName, name: fileName }]
+        files: [{ attachment: fileName, name: fileName }],
       });
 
       plotly.deleteFile(fileName);

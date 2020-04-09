@@ -12,6 +12,7 @@ export interface Config {
   urbanToken: string;
   plotlyToken: string;
   plotlyUsername: string;
+  plotlyHost: string;
 }
 
 export function getEnv(value: string) {
@@ -33,6 +34,7 @@ export const fromEnv = (): Config => {
     imdbToken: getEnv("IMDB_TOKEN"),
     urbanToken: getEnv("URBAN_TOKEN"),
     plotlyToken: getEnv("PLOTLY_TOKEN"),
-    plotlyUsername: getEnv("PLOTLY_USERNAME")
+    plotlyUsername: getEnv("PLOTLY_USERNAME"),
+    plotlyHost: getEnv("PLOTLY_HOST"),
   };
 };

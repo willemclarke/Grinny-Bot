@@ -44,7 +44,7 @@ export class StocksAPI {
   getStockData(symbol: string): Promise<StocksResponse> {
     return new Promise((resolve, reject) => {
       const options = {
-        url: `https://api.worldtradingdata.com/api/v1/stock?symbol=${symbol}&api_token=${this.token}`
+        url: `https://api.worldtradingdata.com/api/v1/stock?symbol=${symbol}&api_token=${this.token}`,
       };
 
       request(options, (error, response, body) => {

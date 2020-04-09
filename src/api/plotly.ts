@@ -12,6 +12,9 @@ interface PlotlyLayout {
   yaxis: {
     title: string;
   };
+  font: {
+    size: number;
+  };
 }
 
 interface PlotlyImageOptions {
@@ -21,13 +24,15 @@ interface PlotlyImageOptions {
 
 export class Plotly {
   username: string;
-  token: string;
+  host: string;
+  apiKey: string;
   plotly: any;
 
-  constructor(username: string, token: string) {
+  constructor(username: string, apiKey: string, host: string) {
     this.username = username;
-    this.token = token;
-    this.plotly = plotly(username, token);
+    this.apiKey = apiKey;
+    this.host = host;
+    this.plotly = plotly({ username: username, apiKey: apiKey, host: host });
   }
 
   createGraph(data: PlotlyData, layout: PlotlyLayout, imgOpts: PlotlyImageOptions, fileName: string) {
@@ -54,7 +59,7 @@ export class Plotly {
 
   deleteFile(path: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      fs.unlink(path, err => {
+      fs.unlink(path, (err) => {
         if (err) {
           console.log(err);
           reject(err);

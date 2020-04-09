@@ -26,7 +26,7 @@ export const stocksAPI = new StocksAPI(config.stocksToken);
 export const nasaAPI = new NasaAPI(config.nasaToken);
 export const urbanAPI = new UrbanAPI(config.urbanToken);
 export const imdbAPI = new IMDBAPI(config.imdbToken);
-export const plotly = new Plotly(config.plotlyUsername, config.plotlyToken);
+export const plotly = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
 const pitId: string = "642229195405131776";
 const vipId: string = "444358361098616833";
@@ -42,7 +42,7 @@ discord.once("ready", () => {
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
 
-discord.on("message", message => {
+discord.on("message", (message) => {
   const { channel, content, author } = <{ channel: Discord.TextChannel; content: string; author: Discord.User }>message;
 
   if (!content.startsWith(prefix) || author.bot) {
@@ -90,7 +90,7 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
   const listOfCommands = new Discord.RichEmbed({
     author: {
       name: "GrinnyBot",
-      icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+      icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
     },
     title: "List of Discord Commands",
     color: 0x7289da,
@@ -99,29 +99,29 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
       { name: "!stats", value: "Faceit Statistics Command: requires <!stats csgo Faceit_Name>" },
       {
         name: "!weather",
-        value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`
+        value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`,
       },
       {
         name: "!stocks",
-        value: `Stock Market Information Command: requires <!stocks STOCK_SYMBOL> e.g. <!stocks TWTR>`
+        value: `Stock Market Information Command: requires <!stocks STOCK_SYMBOL> e.g. <!stocks TWTR>`,
       },
       {
         name: "!nasa",
-        value: `NASA Astronomy Picture of the Day Command: simply requires <!nasa>`
+        value: `NASA Astronomy Picture of the Day Command: simply requires <!nasa>`,
       },
       {
         name: "!urban",
-        value: `Urban Dictionary Command: requires <!urban WORD>, spaced words require: <!urban "SPACED WORD">`
+        value: `Urban Dictionary Command: requires <!urban WORD>, spaced words require: <!urban "SPACED WORD">`,
       },
       {
         name: "!imdb",
-        value: `IMDB Movie/series Information Command: requires <!urban Movie>, spaced words require: <!urban "Spaced Movie/Series">`
+        value: `IMDB Movie/series Information Command: requires <!urban Movie>, spaced words require: <!urban "Spaced Movie/Series">`,
       },
       {
         name: "!anime & !manga",
-        value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title> <!manga title>, spaced titles require: <!anime "spaced title name">`
-      }
-    ]
+        value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title> <!manga title>, spaced titles require: <!anime "spaced title name">`,
+      },
+    ],
   });
 
   return channel.send(listOfCommands);
