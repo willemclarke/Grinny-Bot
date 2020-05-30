@@ -2,15 +2,22 @@ import Discord from "discord.js";
 import _ from "lodash";
 import { formatDiscordMessage, faceit } from "..";
 
-export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]): Promise<Discord.Message | Discord.Message[]> {
+export function getFaceitStatistics(
+  channel: Discord.TextChannel,
+  args: string[]
+): Promise<Discord.Message | Discord.Message[]> {
   if (args.length !== 2) {
-    return channel.send(`\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``);
+    return channel.send(
+      `\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``
+    );
   } else {
     const [game, username] = args;
 
     return faceit.getGeneralStats(game, username).then((playerDetails) => {
       if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
-        return channel.send(`\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``);
+        return channel.send(
+          `\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``
+        );
       }
 
       const { player_id, games } = playerDetails;
@@ -21,7 +28,8 @@ export function getFaceitStatistics(channel: Discord.TextChannel, args: string[]
         const discordStatsResponse = new Discord.RichEmbed({
           author: {
             name: "GrinnyBot",
-            icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+            icon_url:
+              "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
           },
           title: `Statistics for ${username}`,
           url: `https://www.faceit.com/en/players/${username}`,
@@ -76,7 +84,7 @@ export function faceitUserData(channel: Discord.TextChannel) {
     getFaceitUser("csgo", "m00sebreeder"),
     getFaceitUser("csgo", "street_rat"),
     getFaceitUser("csgo", "flickzy"),
-    getFaceitUser("csgo", "donaldo_desu"),
+    getFaceitUser("csgo", "skinny-dick"),
     getFaceitUser("csgo", "Texta"),
     getFaceitUser("csgo", "sethleeson"),
     getFaceitUser("csgo", "treena"),
