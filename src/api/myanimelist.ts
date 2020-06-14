@@ -42,7 +42,7 @@ export interface MALStatsResponse {
 export async function getAnime(name: string): Promise<MALSearchAnimeResponse> {
   const options = {
     url: `https://api.jikan.moe/v3/search/anime?q=${name}&page=1&limit=1`,
-    json: true
+    json: true,
   };
   const result = await rp(options);
   return result.results[0];
@@ -51,7 +51,7 @@ export async function getAnime(name: string): Promise<MALSearchAnimeResponse> {
 export async function getManga(name: string): Promise<MALSearchMangaResponse> {
   const options = {
     url: `https://api.jikan.moe/v3/search/manga?q=${name}&page=1&limit=1`,
-    json: true
+    json: true,
   };
   const result = await rp(options);
   return result.results[0];
@@ -59,8 +59,8 @@ export async function getManga(name: string): Promise<MALSearchMangaResponse> {
 
 export async function getAnimeStats(mal_id: number): Promise<MALStatsResponse> {
   const options = {
-    url: `https://api.jikan.moe/v3/anime/${mal_id}/stats/`,
-    json: true
+    url: `https://api.jikan.moe/v3/anime/${mal_id}/stats`,
+    json: true,
   };
   const result = await rp(options);
   return result.scores;
@@ -68,8 +68,8 @@ export async function getAnimeStats(mal_id: number): Promise<MALStatsResponse> {
 
 export async function getMangaStats(mal_id: number): Promise<MALStatsResponse> {
   const options = {
-    url: `https://api.jikan.moe/v3/manga/${mal_id}/stats/`,
-    json: true
+    url: `https://api.jikan.moe/v3/manga/${mal_id}/stats`,
+    json: true,
   };
   const result = await rp(options);
   return result.scores;

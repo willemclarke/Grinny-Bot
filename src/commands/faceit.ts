@@ -37,31 +37,31 @@ export function getFaceitStatistics(
           timestamp: new Date(),
           fields: [
             {
-              name: "Faceit Level",
+              name: "**Faceit Level**",
               value: skill_level_label,
             },
             {
-              name: "Rating",
+              name: "**Rating**",
               value: faceitEloString,
             },
             {
-              name: "Matches Played",
+              name: "**Matches Played**",
               value: playerStats.lifetime.Matches,
             },
             {
-              name: "Win Rate",
+              name: "**Win Rate**",
               value: `${playerStats.lifetime["Win Rate %"]}%`,
             },
             {
-              name: "Longest Win Streak",
+              name: "**Longest Win Streak**",
               value: playerStats.lifetime["Longest Win Streak"],
             },
             {
-              name: "K/D Ratio",
+              name: "**K/D Ratio**",
               value: playerStats.lifetime["Average K/D Ratio"],
             },
             {
-              name: "Headshot %",
+              name: "**Headshot %**",
               value: `${playerStats.lifetime["Average Headshots %"]}%`,
             },
           ],

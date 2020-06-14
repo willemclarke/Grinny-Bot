@@ -2,11 +2,12 @@ import Discord from "discord.js";
 import _ from "lodash";
 import { nasaAPI } from "..";
 
-export function getAstronomyPic(channel: Discord.TextChannel): Promise<void | Discord.Message | Discord.Message[]> {
+export function getAstronomyPic(
+  channel: Discord.TextChannel
+): Promise<void | Discord.Message | Discord.Message[]> {
   return nasaAPI
     .getAPOTD()
     .then((nasaResponse) => {
-      console.log(nasaResponse);
       const { copyright, title, url, code, msg, explanation } = nasaResponse;
       if (code && code !== 200) {
         channel.send(`\`\`\`${msg}\`\`\``);
@@ -21,18 +22,19 @@ export function getAstronomyPic(channel: Discord.TextChannel): Promise<void | Di
       const discordNasaResponse = new Discord.RichEmbed({
         author: {
           name: "GrinnyBot",
-          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+          icon_url:
+            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
         },
         title: `NASA Astrology Picture of the Day`,
         color: 0x7289da,
         timestamp: new Date(),
         fields: [
           {
-            name: "Title",
+            name: "**Title**",
             value: `${title} by ${checkCopyright}`,
           },
           {
-            name: "Explanation",
+            name: "**Explanation**",
             value: trimExplanation,
           },
         ],

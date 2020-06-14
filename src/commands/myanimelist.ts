@@ -1,7 +1,6 @@
 import Discord from "discord.js";
 import _ from "lodash";
 import { plotly } from "../index";
-
 import { getAnime, getManga, getAnimeStats, getMangaStats } from "../api/myanimelist";
 import { randomString } from "../utils";
 
@@ -56,7 +55,8 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
         timestamp: new Date(),
         author: {
           name: "GrinnyBot",
-          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+          icon_url:
+            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
         },
         title: `MyAnimeList Information for ${title} (${type}) `,
         url,
@@ -94,6 +94,7 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
       plotly.deleteFile(fileName);
     }
   } catch (err) {
+    console.log(err);
     channel.send(`\`\`\`${err}\`\`\``);
   }
 }
@@ -107,7 +108,20 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
     } else {
       const [name] = args;
       const mangaData = await getManga(name);
-      const { mal_id, url, image_url, synopsis, score, members, title, type, publishing, volumes, chapters } = mangaData;
+      const {
+        mal_id,
+        url,
+        image_url,
+        synopsis,
+        score,
+        members,
+        title,
+        type,
+        publishing,
+        volumes,
+        chapters,
+      } = mangaData;
+
       const formattedPublishing = publishing === false ? "Finished Publishing" : "Currently Publishing";
       const formattedChapters = chapters === 0 ? "Unknown Chapters" : `${chapters}`;
       const formattedVolumes = volumes === 0 ? "Unknown Volumes" : `${volumes}`;
@@ -150,7 +164,8 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
         timestamp: new Date(),
         author: {
           name: "GrinnyBot",
-          icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+          icon_url:
+            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
         },
         title: `MyAnimeList Information for ${title} (${type}) `,
         url,
@@ -192,6 +207,7 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
       plotly.deleteFile(fileName);
     }
   } catch (err) {
+    console.log(err);
     channel.send(`\`\`\`${err}\`\`\``);
   }
 }

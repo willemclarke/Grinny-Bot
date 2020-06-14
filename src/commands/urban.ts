@@ -15,21 +15,20 @@ export function getUrbanDictionaryDefinition(
 
     return urbanAPI
       .getUrbanDictionary(term)
-      .then(urbanResponse => {
+      .then((urbanResponse) => {
         const { word, definition, example, author, written_on, permalink, thumbs_up } = urbanResponse.list[0];
-        const formattedDate: string = _.slice(written_on, 0, 10)
-          .join("")
-          .toString();
+        const formattedDate: string = _.slice(written_on, 0, 10).join("").toString();
 
         const trimDefnition = _.truncate(definition, {
           length: 1024,
-          omission: "[...]"
+          omission: "[...]",
         });
 
         const discordUrbanResponse = new Discord.RichEmbed({
           author: {
             name: "GrinnyBot",
-            icon_url: "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg"
+            icon_url:
+              "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
           },
           title: `Urban Dictionary Definition for:  ${_.upperFirst(word)}`,
           url: `${permalink}`,
@@ -37,28 +36,28 @@ export function getUrbanDictionaryDefinition(
           timestamp: new Date(),
           fields: [
             {
-              name: `Definition: ${thumbs_up} Upvotes`,
+              name: `**Definition: ${thumbs_up} Upvotes**`,
               value: trimDefnition,
-              inline: true
+              inline: true,
             },
             {
-              name: "Example",
-              value: example
+              name: "**Example**",
+              value: example,
             },
             {
-              name: "Author",
-              value: author
+              name: "**Author**",
+              value: author,
             },
             {
-              name: "Written on",
-              value: formattedDate
-            }
-          ]
+              name: "**Written on**",
+              value: formattedDate,
+            },
+          ],
         });
 
         return channel.send(discordUrbanResponse);
       })
-      .catch(error => {
+      .catch((error) => {
         return channel.send(`\`\`\`${error}\`\`\``);
       });
   }
