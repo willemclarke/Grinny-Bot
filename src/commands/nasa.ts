@@ -1,6 +1,6 @@
-import Discord from "discord.js";
-import _ from "lodash";
-import { nasaAPI } from "..";
+import Discord from 'discord.js';
+import _ from 'lodash';
+import { nasaAPI } from '..';
 
 export function getAstronomyPic(
   channel: Discord.TextChannel
@@ -13,28 +13,28 @@ export function getAstronomyPic(
         channel.send(`\`\`\`${msg}\`\`\``);
       }
 
-      const checkCopyright = copyright ? copyright : "Unknown";
+      const checkCopyright = copyright ? copyright : 'Unknown';
       const trimExplanation: string = _.truncate(explanation, {
         length: 1024,
-        omission: "[...]",
+        omission: '[...]',
       });
 
       const discordNasaResponse = new Discord.RichEmbed({
         author: {
-          name: "GrinnyBot",
+          name: 'GrinnyBot',
           icon_url:
-            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+            'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
         },
-        title: `NASA Astrology Picture of the Day`,
+        title: `NASA Astronomy Picture of the Day`,
         color: 0x7289da,
         timestamp: new Date(),
         fields: [
           {
-            name: "**Title**",
+            name: '**Title**',
             value: `${title} by ${checkCopyright}`,
           },
           {
-            name: "**Explanation**",
+            name: '**Explanation**',
             value: trimExplanation,
           },
         ],

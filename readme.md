@@ -20,7 +20,7 @@
 * Third feature utilises NASA API to display Astronomy Picture of the Day - Posted by the bot automatically every 24hrs, and by user request (!nasa):
 
     <p float="left">
-      <img src="https://i.gyazo.com/cedf7be3708a90b20a094d5adcc7c2b1.png">
+      <img src="https://i.gyazo.com/ad7791439c1efee50a408c5fdcab1d49.png">
     </p>
 
 * Fourth feature utilises IMDB Api to display movie/series information via discord:
