@@ -1,6 +1,6 @@
-import Discord from "discord.js";
-import _ from "lodash";
-import { weatherAPI } from "..";
+import Discord from 'discord.js';
+import _ from 'lodash';
+import { weatherAPI } from '..';
 
 export function getWeather(
   channel: Discord.TextChannel,
@@ -25,36 +25,37 @@ export function getWeather(
 
       const windSpeedKmh: number = Math.round(weatherDetails.wind.speed * 1.852);
       const weatherIcon: string = `http://openweathermap.org/img/wn/${weatherDetails.weather[0].icon}@2x.png`;
+      const cityNameFirstLetterUppercase = _.upperFirst(cityName);
 
       const discordWeatherResponse = new Discord.RichEmbed({
         author: {
-          name: "GrinnyBot",
+          name: 'GrinnyBot',
           icon_url:
-            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+            'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
         },
-        title: `Weather for ${cityName}`,
+        title: `Weather for ${cityNameFirstLetterUppercase}`,
         color: 0x7289da,
         timestamp: new Date(),
         fields: [
           {
-            name: "**Temperature**",
+            name: '**Temperature**',
             value: `${Math.round(weatherDetails.main.temp)}°C`,
           },
           {
-            name: "**Minimum Temperature**",
+            name: '**Minimum Temperature**',
             value: `${Math.round(weatherDetails.main.temp_min)}°C`,
           },
           {
-            name: "**Maximum Temperature**",
+            name: '**Maximum Temperature**',
             value: `${Math.round(weatherDetails.main.temp_max)}°C`,
           },
           {
-            name: "**Wind Speed**",
+            name: '**Wind Speed**',
             value: `${windSpeedKmh} Km/h`,
           },
           {
-            name: "**Weather Conditions**",
-            value: _.upperFirst(weatherDetails.weather[0]["description"]),
+            name: '**Weather Conditions**',
+            value: _.upperFirst(weatherDetails.weather[0]['description']),
           },
         ],
         image: {

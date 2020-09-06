@@ -8,7 +8,7 @@
 - First feature was a simple weather functionality so we can simply type in the chat and see eachothers weather conditions:
 
   <p float="left">
-    <img src="https://i.gyazo.com/77c7a52defda6b14a8ba74012e8436c9.png">
+    <img src="https://i.gyazo.com/374cd8b0c2aafc2af622b55c57f7cd9e.png">
   </p>
 
 - Second feature utilises the JIKAN (unoffical MyAnimeList API) to display anime and manga data to the user. This command was interesting to make as I got to utilise the [plotly](https://plot.ly/nodejs/getting-started/#getting-started-with-plotly-for-nodejs) graphing library to display user rating statistics for each anime/manga.
