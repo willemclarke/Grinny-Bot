@@ -1,4 +1,4 @@
-import request from "request";
+import request from 'request';
 
 export interface FaceitBasicResponse {
   player_id: string;
@@ -22,10 +22,19 @@ export interface FaceitBasicResponse {
 export interface FaceitIndividualResponse {
   lifetime: {
     Matches: string;
-    "Win Rate %": string;
-    "Longest Win Streak": string;
-    "Average K/D Ratio": string;
-    "Average Headshots %": string;
+    'Win Rate %': string;
+    'Longest Win Streak': string;
+    'Average K/D Ratio': string;
+    'Average Headshots %': string;
+  };
+}
+
+export interface FaceitIndividualGraphResponse {
+  nickname: string;
+  games: {
+    csgo: {
+      faceit_elo: number;
+    };
   };
 }
 
@@ -39,9 +48,9 @@ export class Faceit {
   getGeneralStats(game: string, username: string): Promise<FaceitBasicResponse> {
     return new Promise((resolve, reject) => {
       const options = {
-        url: "https://open.faceit.com/data/v4/players",
+        url: 'https://open.faceit.com/data/v4/players',
         qs: { nickname: username, game: game },
-        headers: { Authorization: `Bearer ${this.token}` }
+        headers: { Authorization: `Bearer ${this.token}` },
       };
 
       request(options, (error, response, body) => {
@@ -57,7 +66,23 @@ export class Faceit {
     return new Promise((resolve, reject) => {
       const options = {
         url: `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
-        headers: { Authorization: `Bearer ${this.token}` }
+        headers: { Authorization: `Bearer ${this.token}` },
+      };
+
+      request(options, (error, response, body) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(JSON.parse(body));
+      });
+    });
+  }
+
+  getPlayerGraphStats(playerId: string): Promise<FaceitIndividualGraphResponse> {
+    return new Promise((resolve, reject) => {
+      const options = {
+        url: `https://open.faceit.com/data/v4/players/${playerId}`,
+        headers: { Authorization: `Bearer ${this.token}` },
       };
 
       request(options, (error, response, body) => {

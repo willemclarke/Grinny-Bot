@@ -1,8 +1,8 @@
-import Discord from "discord.js";
-import _ from "lodash";
-import { plotly } from "../index";
-import { getAnime, getManga, getAnimeStats, getMangaStats } from "../api/myanimelist";
-import { randomString } from "../utils";
+import Discord from 'discord.js';
+import _ from 'lodash';
+import { plotly } from '../index';
+import { getAnime, getManga, getAnimeStats, getMangaStats } from '../api/myanimelist';
+import { randomString } from '../utils';
 
 export async function getAnimeInfo(channel: Discord.TextChannel, args: string[]): Promise<void> {
   try {
@@ -14,10 +14,11 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
       const [name] = args;
       const animeData = await getAnime(name);
       const { url, image_url, synopsis, episodes, score, members, title, type, airing, mal_id } = animeData;
-      const formattedEpisodes = episodes === 0 ? "Unknown Episodes" : `${episodes}`;
-      const formattedAiring = airing === false ? "Finished Airing" : "Currently Airing";
+      const formattedEpisodes = episodes === 0 ? 'Unknown Episodes' : `${episodes}`;
+      const formattedAiring = airing === false ? 'Finished Airing' : 'Currently Airing';
 
       const animeStats = await getAnimeStats(mal_id);
+      console.log('animeSTats: ', animeStats);
       const xAxis = _.map(Object.keys(animeStats), (key) => {
         return _.parseInt(key);
       });
@@ -28,7 +29,7 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
       const layout = {
         title: `Vote distribution for ${title}`,
         yaxis: {
-          title: "Number of Votes",
+          title: 'Number of Votes',
         },
         font: {
           size: 20,
@@ -36,7 +37,7 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
       };
 
       const imgOpts = {
-        format: "png",
+        format: 'png',
         width: 900,
         height: 500,
       };
@@ -44,7 +45,7 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
       const data = {
         x: xAxis,
         y: yAxis,
-        type: "bar",
+        type: 'bar',
       };
 
       const fileName = `${randomString(16)}.png`;
@@ -54,9 +55,9 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
         color: 0x7289da,
         timestamp: new Date(),
         author: {
-          name: "GrinnyBot",
+          name: 'GrinnyBot',
           icon_url:
-            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+            'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
         },
         title: `MyAnimeList Information for ${title} (${type}) `,
         url,
@@ -68,19 +69,19 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
         },
         fields: [
           {
-            name: "**Score**",
+            name: '**Score**',
             value: `Rated **${score}** by **${members}** members`,
           },
           {
-            name: "**Synopsis**",
+            name: '**Synopsis**',
             value: `${synopsis}`,
           },
           {
-            name: "**Status**",
+            name: '**Status**',
             value: `${formattedAiring}`,
           },
           {
-            name: "**Episodes**",
+            name: '**Episodes**',
             value: `${formattedEpisodes}`,
           },
         ],
@@ -122,9 +123,9 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
         chapters,
       } = mangaData;
 
-      const formattedPublishing = publishing === false ? "Finished Publishing" : "Currently Publishing";
-      const formattedChapters = chapters === 0 ? "Unknown Chapters" : `${chapters}`;
-      const formattedVolumes = volumes === 0 ? "Unknown Volumes" : `${volumes}`;
+      const formattedPublishing = publishing === false ? 'Finished Publishing' : 'Currently Publishing';
+      const formattedChapters = chapters === 0 ? 'Unknown Chapters' : `${chapters}`;
+      const formattedVolumes = volumes === 0 ? 'Unknown Volumes' : `${volumes}`;
 
       const mangaStats = await getMangaStats(mal_id);
       const xAxis = _.map(Object.keys(mangaStats), (key) => {
@@ -145,7 +146,7 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
       };
 
       const imgOpts = {
-        format: "png",
+        format: 'png',
         width: 900,
         height: 500,
       };
@@ -153,7 +154,7 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
       const data = {
         x: xAxis,
         y: yAxis,
-        type: "bar",
+        type: 'bar',
       };
 
       const fileName = `${randomString(16)}.png`;
@@ -163,9 +164,9 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
         color: 0x7289da,
         timestamp: new Date(),
         author: {
-          name: "GrinnyBot",
+          name: 'GrinnyBot',
           icon_url:
-            "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+            'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
         },
         title: `MyAnimeList Information for ${title} (${type}) `,
         url,
@@ -177,23 +178,23 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
         },
         fields: [
           {
-            name: "**Score**",
+            name: '**Score**',
             value: `Rated **${score}** by **${members}** members`,
           },
           {
-            name: "**Synopsis**",
+            name: '**Synopsis**',
             value: `${synopsis}`,
           },
           {
-            name: "**Status**",
+            name: '**Status**',
             value: `${formattedPublishing}`,
           },
           {
-            name: "**Volumes**",
+            name: '**Volumes**',
             value: `${formattedVolumes}`,
           },
           {
-            name: "**Chapters**",
+            name: '**Chapters**',
             value: `${formattedChapters}`,
           },
         ],
