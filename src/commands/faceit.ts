@@ -74,6 +74,7 @@ export function getFaceitStatistics(
   }
 }
 
+// Function to attain faceit player id's:
 function getFaceitUser(
   game: string,
   username: string
@@ -88,26 +89,27 @@ function getFaceitUser(
   });
 }
 
-// need to return nickname
-function getFaceitUserElo(game: string, playerId: string): Promise<any> {
-  return faceit.getPlayerStats(game, playerId).then((playerStats) => {
-    console.log(playerStats);
+function getFaceitUserElo(playerId: string): Promise<{ username: string; rating: number }> {
+  return faceit.getPlayerGraphStats(playerId).then((resp) => {
+    const { nickname, games } = resp;
+    return {
+      username: nickname,
+      rating: games.csgo.faceit_elo,
+    };
   });
 }
 
 export function faceitUserData(channel: Discord.TextChannel) {
   const promises = [
-    getFaceitUser('csgo', 'm00sebreeder'),
-    getFaceitUser('csgo', 'birdseed'),
-    getFaceitUser('csgo', 'flickzy'),
-    getFaceitUser('csgo', 'skinny-dick'),
-    getFaceitUser('csgo', 'Texta'),
-    getFaceitUser('csgo', 'sethleeson'),
-    getFaceitUser('csgo', 'treena'),
-    getFaceitUser('csgo', 'InfrequeNt'),
-    getFaceitUser('csgo', 'mswagbabyy'),
-    getFaceitUser('csgo', 'dbousamra'),
-    getFaceitUserElo('1b6a7877-766e-4dd6-9ef4-68c1b8e9d9ce', 'csgo'),
+    getFaceitUserElo('1b6a7877-766e-4dd6-9ef4-68c1b8e9d9ce'), // willem
+    getFaceitUserElo('f613a6d8-9ddb-419d-9f22-66ad38c43f3c'), // bass
+    getFaceitUserElo('d3029d03-5908-4669-b93a-4cbb0afbfe9f'), // flickz
+    getFaceitUserElo('f341d26d-9f2d-4e5d-a013-22d461572208'), // richie
+    getFaceitUserElo('85a79c9a-c080-4dfe-b424-c8b559b53462'), // texta
+    getFaceitUserElo('4cbdb274-a1ed-4a44-9163-29418084f943'), // treena
+    getFaceitUserElo('eb5430b6-1b4f-4279-8ae5-3b60da1491ee'), // jesse
+    getFaceitUserElo('f4b78c04-5893-4144-b57b-542ee392fc6d'), // mitch
+    getFaceitUserElo('802f15e7-da6c-4ce9-82ab-e9e7e877bd76'), // dbou
   ];
 
   return Promise.all(promises)
@@ -127,16 +129,3 @@ export function faceitUserData(channel: Discord.TextChannel) {
       channel.send(`\`\`\`${error}\`\`\``);
     });
 }
-
-// [
-//   { username: 'm00sebreeder', rating: 2497, playerId: '1b6a7877-766e-4dd6-9ef4-68c1b8e9d9ce' },
-//   { username: 'birdseed', rating: 2047, playerId: 'f613a6d8-9ddb-419d-9f22-66ad38c43f3c' },
-//   { username: 'flickzy', rating: 2878, playerId: 'd3029d03-5908-4669-b93a-4cbb0afbfe9f' },
-//   { username: 'skinny-dick', rating: 2129, playerId: 'f341d26d-9f2d-4e5d-a013-22d461572208' },
-//   { username: 'Texta', rating: 3124, playerId: '85a79c9a-c080-4dfe-b424-c8b559b53462' },
-//   { username: 'sethleeson', rating: 2046, playerId: '38b955bd-501e-45f3-a12c-7601d656b2bc' },
-//   { username: 'treena', rating: 1022, playerId: '4cbdb274-a1ed-4a44-9163-29418084f943' },
-//   { username: 'InfrequeNt', rating: 2971, playerId: 'eb5430b6-1b4f-4279-8ae5-3b60da1491ee' },
-//   { username: 'mswagbabyy', rating: 2476, playerId: 'f4b78c04-5893-4144-b57b-542ee392fc6d' },
-//   { username: 'dbousamra', rating: 1574, playerId: '802f15e7-da6c-4ce9-82ab-e9e7e877bd76' },
-// ];
