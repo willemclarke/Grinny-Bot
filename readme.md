@@ -32,13 +32,13 @@
 - Fifth feature was to track our Counterstrike: global offensive statistics from the pugs we play using the Faceit Client and API:
 
   <p float="left">
-    <img src="https://i.gyazo.com/7a526ed0f9ab7544734ad01e14bff4f8.png">
+    <img src="https://i.gyazo.com/931be7bfe1f98f0587de70e33eb7e853.png">
   </p>
 
 * Sixth feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
 
     <p float="left">
-      <img src="https://i.gyazo.com/53bc8f09a6378e7bdedcb8444cd921c9.png">
+      <img src="https://i.gyazo.com/f91482c668107ece75cf754794c4ba3c.png">
     </p>
 
 * Seventh feature was to display stock data:
