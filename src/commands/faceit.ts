@@ -74,8 +74,7 @@ export function getFaceitStatistics(
   }
 }
 
-// Function to attain faceit player id's:
-function getFaceitUser(
+function getFaceitUserId(
   game: string,
   username: string
 ): Promise<{ username: string; rating: number; playerId: string }> {
@@ -99,7 +98,9 @@ function getFaceitUserElo(playerId: string): Promise<{ username: string; rating:
   });
 }
 
-export function faceitUserData(channel: Discord.TextChannel) {
+export async function faceitUserData(
+  channel: Discord.TextChannel
+): Promise<void | Discord.Message | Discord.Message[]> {
   const promises = [
     getFaceitUserElo('1b6a7877-766e-4dd6-9ef4-68c1b8e9d9ce'), // willem
     getFaceitUserElo('f613a6d8-9ddb-419d-9f22-66ad38c43f3c'), // bass
