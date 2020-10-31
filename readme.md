@@ -23,9 +23,15 @@
       <img src="https://i.gyazo.com/ad7791439c1efee50a408c5fdcab1d49.png">
     </p>
 
-* Fourth feature utilises [stoic quoutes](https://github.com/benhoneywill/stoic-quotes) to display random quote to the user
+* Fourth feature utilises [stoic quoutes](https://github.com/benhoneywill/stoic-quotes) to display random quote to the user (displays corresponding image for each philosopher)
   <p float="left">
-      <img src="https://i.gyazo.com/f97590f2559ed14c7f5b372748201b7d.png">
+      <img src="https://i.gyazo.com/d79e8e0e46c3b09fed3df848fd1c3510.png">
+    </p>
+     <p float="left">
+      <img src="https://i.gyazo.com/d6a2fdb1afdec3f08e15fe1b01749a00.png">
+    </p>
+     <p float="left">
+      <img src="https://i.gyazo.com/ffe2337ed33551371f4e5a372c0b76ad.png">
     </p>
 
 * Fifth feature utilises IMDB Api to display movie/series information via discord:
