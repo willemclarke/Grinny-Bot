@@ -23,7 +23,6 @@ export function getFaceitStatistics(
       const { player_id, games } = playerDetails;
       const { skill_level_label, faceit_elo } = games.csgo;
       const faceitEloString = faceit_elo.toString();
-      console.log('player id: ', player_id);
 
       return faceit.getPlayerStats(player_id, game).then((playerStats) => {
         const discordStatsResponse = new Discord.RichEmbed({
@@ -115,7 +114,6 @@ export async function faceitUserData(
 
   return Promise.all(promises)
     .then((users) => {
-      console.log('user playerIds: ', users);
       const playerElos = _.reduce(
         users,
         (acc, user) => {

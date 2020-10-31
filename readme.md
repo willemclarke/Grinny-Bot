@@ -23,25 +23,30 @@
       <img src="https://i.gyazo.com/ad7791439c1efee50a408c5fdcab1d49.png">
     </p>
 
-* Fourth feature utilises IMDB Api to display movie/series information via discord:
+* Fourth feature utilises [stoic quoutes](https://github.com/benhoneywill/stoic-quotes) to display random quote to the user
+  <p float="left">
+      <img src="https://i.gyazo.com/f97590f2559ed14c7f5b372748201b7d.png">
+    </p>
+
+* Fifth feature utilises IMDB Api to display movie/series information via discord:
 
     <p float="left">
       <img src="https://i.gyazo.com/a794ed2d4eb8eb6811581a04949e5671.png">
     </p>
 
-- Fifth feature was to track our Counterstrike: global offensive statistics from the pugs we play using the Faceit Client and API:
+- Sixth feature was to track our Counterstrike: global offensive statistics from the pugs we play using the Faceit Client and API:
 
   <p float="left">
     <img src="https://i.gyazo.com/931be7bfe1f98f0587de70e33eb7e853.png">
   </p>
 
-* Sixth feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
+* Seventh feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
 
     <p float="left">
       <img src="https://i.gyazo.com/f91482c668107ece75cf754794c4ba3c.png">
     </p>
 
-* Seventh feature was to display stock data:
+* Eight feature was to display stock data:
 
   <p float="left">
     <img src="https://i.gyazo.com/162746deaa096d8eabb6cfece2dbd15b.png">
