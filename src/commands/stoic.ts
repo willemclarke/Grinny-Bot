@@ -47,3 +47,10 @@ export async function stoicQuote(channel: Discord.TextChannel) {
   }
 }
 
+export function stoicQuoteInterval(channel: Discord.TextChannel) {
+  setInterval(() => {
+    stoicQuote(channel);
+  }, 1000 * 60 * 60 * 6 );
+}
+
+

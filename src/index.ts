@@ -14,9 +14,10 @@ import { getUrbanDictionaryDefinition } from './commands/urban';
 import { IMDBAPI } from './api/imdb';
 import { getImdbInfo } from './commands/imdb';
 import { getAnimeInfo, getMangaInfo } from './commands/myanimelist';
+import { stoicQuote, stoicQuoteInterval } from './commands/stoic';
 import { fromEnv, Config } from './config';
 import { Plotly } from './api/plotly';
-import { stoicQuote } from './commands/stoic';
+
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
@@ -38,6 +39,7 @@ discord.once('ready', () => {
   const vipChannel = discord.channels.get(vipId) as Discord.TextChannel;
 
   astronomyPicInterval(vipChannel);
+  stoicQuoteInterval(vipChannel);
 
   console.log('Ready!');
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
