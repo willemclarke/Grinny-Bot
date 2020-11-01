@@ -23,7 +23,7 @@
       <img src="https://i.gyazo.com/ad7791439c1efee50a408c5fdcab1d49.png">
     </p>
 
-* Fourth feature utilises [stoic quoutes](https://github.com/benhoneywill/stoic-quotes) to display random quote to the user (displays corresponding image for each philosopher)
+* Fourth feature utilises [stoic quotes](https://github.com/benhoneywill/stoic-quotes) to display random quote to the user (displays corresponding image for each philosopher)
   <p float="left">
       <img src="https://i.gyazo.com/d79e8e0e46c3b09fed3df848fd1c3510.png">
     </p>
