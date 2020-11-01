@@ -14,6 +14,12 @@ export async function stoicQuote(channel: Discord.TextChannel) {
         epictetus: 'https://pbs.twimg.com/profile_images/1305885843031195650/2atRwqJS_400x400.jpg'
       }
 
+      const philosopherLinks = {
+        marcusAurelius: "https://en.wikipedia.org/wiki/Marcus_Aurelius",
+        seneca: "https://en.wikipedia.org/wiki/Seneca_the_Younger",
+        epictetus: "https://en.wikipedia.org/wiki/Epictetus"
+      }
+
       const matchingImage = (author: string): string => {
         if (author === "Seneca") {
           return philosopherImages.seneca
@@ -21,6 +27,17 @@ export async function stoicQuote(channel: Discord.TextChannel) {
           return philosopherImages.marcusAurelius
         } else if (author === "Epictetus") {
           return philosopherImages.epictetus
+        }
+        return author
+      }
+
+      const matchingPhilosopherLink = (author: string): string => {
+        if (author === 'Seneca') {
+          return philosopherLinks.seneca
+        } else if (author === "Marcus Aurelius") {
+          return philosopherLinks.marcusAurelius
+        } else if (author === "Epictetus") {
+          return philosopherLinks.epictetus
         }
         return author
       }
@@ -36,7 +53,7 @@ export async function stoicQuote(channel: Discord.TextChannel) {
         thumbnail: {
           url: matchingImage(author)
         },
-        description: `"${text}" - **${author}**`
+        description: `"${text}" - [**${author}**](${matchingPhilosopherLink(author)})`
       })
 
       await channel.send(discordQuoteResponse)
