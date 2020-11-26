@@ -17,7 +17,7 @@ import { getAnimeInfo, getMangaInfo } from './commands/myanimelist';
 import { stoicQuote, stoicQuoteInterval } from './commands/stoic';
 import { fromEnv, Config } from './config';
 import { Plotly } from './api/plotly';
-
+import { retake } from './commands/retake';
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
@@ -89,7 +89,9 @@ discord.on('message', (message) => {
   } else if (command === 'manga') {
     return getMangaInfo(channel, args);
   } else if (command === 'stoic') {
-    return stoicQuote(channel)
+    return stoicQuote(channel);
+  } else if (command === 'retake') {
+    return retake(channel);
   }
 });
 
@@ -130,9 +132,9 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
         value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title> <!manga title>, spaced titles require: <!anime "spaced title name">`,
       },
       {
-        name: "**!stoic**",
-        value: 'Stoic quote generator command: requires <!stoic>'
-      }
+        name: '**!stoic**',
+        value: 'Stoic quote generator command: requires <!stoic>',
+      },
     ],
   });
 
