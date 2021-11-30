@@ -10,8 +10,8 @@ export async function stoicQuote(channel: Discord.TextChannel) {
     const philosopherImages = {
       marcusAurelius:
         'https://www.biography.com/.image/t_share/MTE5NDg0MDU0ODg3Njk1ODg3/marcus-aurelius-9192657-1-402.jpg',
-      seneca: 'https://pbs.twimg.com/profile_images/1305118024081584128/Icr8zl2r_400x400.jpg',
-      epictetus: 'https://pbs.twimg.com/profile_images/1305885843031195650/2atRwqJS_400x400.jpg',
+      seneca: 'https://www.thoughtco.com/thmb/7BlgoGGgq_eooln3xcXJ3-jYE64=/768x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-1048461504-4e7e718691924af9a07bbf4b2b81d72f.jpg',
+      epictetus: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/hostedimages/1507496989i/24121395._SY540_.jpg',
     };
 
     const philosopherLinks = {

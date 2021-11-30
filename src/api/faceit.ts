@@ -16,7 +16,7 @@ export interface FaceitBasicResponse {
       message: string;
       http_status: number | string;
     }
-  ];
+  ]
 }
 
 export interface FaceitIndividualResponse {

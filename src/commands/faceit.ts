@@ -14,7 +14,7 @@ export function getFaceitStatistics(
     const [game, username] = args;
 
     return faceit.getGeneralStats(game, username).then((playerDetails) => {
-      if (playerDetails.errors && playerDetails.errors[0].http_status !== 200) {
+      if ( _.head(playerDetails.errors)?.http_status !== 200) {
         return channel.send(
           `\`\`\`${playerDetails.errors[0].message} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``
         );
@@ -73,28 +73,26 @@ export function getFaceitStatistics(
   }
 }
 
-function getFaceitUserId(
+async function getFaceitUserId(
   game: string,
   username: string
 ): Promise<{ username: string; rating: number; playerId: string }> {
-  return faceit.getGeneralStats(game, username).then((playerDetails) => {
-    const { nickname, games, player_id } = playerDetails;
-    return {
-      username: nickname,
-      rating: games.csgo.faceit_elo,
-      playerId: player_id,
-    };
-  });
+  const userId = await faceit.getGeneralStats(game, username)
+
+  return {
+    username: userId.nickname,
+    rating: userId.games.csgo.faceit_elo,
+    playerId: userId.player_id
+  }
 }
 
-function getFaceitUserElo(playerId: string): Promise<{ username: string; rating: number }> {
-  return faceit.getPlayerGraphStats(playerId).then((resp) => {
-    const { nickname, games } = resp;
-    return {
-      username: nickname,
-      rating: games.csgo.faceit_elo,
-    };
-  });
+async function getFaceitUserElo(playerId: string): Promise<{ username: string; rating: number }> {
+  const data = await faceit.getPlayerGraphStats(playerId)
+
+  return {
+    username: data.nickname,
+    rating: data.games.csgo.faceit_elo
+  }
 }
 
 export async function faceitUserData(
