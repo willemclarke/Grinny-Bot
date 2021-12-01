@@ -2,7 +2,8 @@ import Discord from 'discord.js';
 import os from 'os';
 import _ from 'lodash';
 import { Faceit } from './api/faceit';
-import { getFaceitStatistics, faceitUserData } from './commands/faceit';
+import { getFaceitStatistics } from './commands/faceit/faceit';
+import { writeToFile, faceitUserData } from './commands/faceit/faceit-graph';
 import { WeatherAPI } from './api/weather';
 import { getWeather } from './commands/weather';
 import { StocksAPI } from './api/stocks';
@@ -41,6 +42,10 @@ discord.once('ready', () => {
   astronomyPicInterval(vipChannel);
   stoicQuoteInterval(vipChannel);
 
+  setInterval(() => {
+    writeToFile();
+  }, 5000);
+
   console.log('Ready!');
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
@@ -72,9 +77,11 @@ discord.on('message', (message) => {
     return displayHelpCommands(channel);
   } else if (command === 'stats') {
     return getFaceitStatistics(channel, args);
-  } else if (command === 'graph') {
-    return faceitUserData(channel);
-  } else if (command === 'weather') {
+  }
+  // } else if (command === 'graph') {
+  //   return faceitUserData(channel);
+  // }
+  else if (command === 'weather') {
     return getWeather(channel, args);
   } else if (command === 'stocks') {
     return getIndividualStockData(channel, args);
@@ -95,7 +102,9 @@ discord.on('message', (message) => {
   }
 });
 
-function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Message | Discord.Message[]> {
+function displayHelpCommands(
+  channel: Discord.TextChannel
+): Promise<Discord.Message | Discord.Message[]> {
   const listOfCommands = new Discord.RichEmbed({
     author: {
       name: 'GrinnyBot',
@@ -106,7 +115,10 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
     color: 0x7289da,
     timestamp: new Date(),
     fields: [
-      { name: '**!stats**', value: 'Faceit Statistics Command: requires <!stats csgo Faceit_Name>' },
+      {
+        name: '**!stats**',
+        value: 'Faceit Statistics Command: requires <!stats csgo Faceit_Name>',
+      },
       {
         name: '**!weather**',
         value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`,
@@ -142,7 +154,11 @@ function displayHelpCommands(channel: Discord.TextChannel): Promise<Discord.Mess
 }
 
 export function formatDiscordMessage(object: object): string {
-  return _.reduce(object, (acc: string[], value, key) => _.concat(acc, `${key}: ${value}`), []).join('\n');
+  return _.reduce(
+    object,
+    (acc: string[], value, key) => _.concat(acc, `${key}: ${value}`),
+    []
+  ).join('\n');
 }
 
 discord.login(config.discordToken);
