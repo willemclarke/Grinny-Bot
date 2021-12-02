@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { formatDiscordMessage, faceit } from '../..';
+import { faceit } from '../..';
 
 export function getFaceitStatistics(
   channel: Discord.TextChannel,

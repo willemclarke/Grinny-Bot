@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "develop": "ts-node-dev src/index.ts",
+    "develop": "DATABASE_URL=$(heroku config:get DATABASE_URL -a grinny-bot) ts-node-dev src/index.ts",
+    "pgcli": "pgcli -D grinny-heroku",
     "compile": "tsc --noEmit"
   },
   "author": "",
@@ -28,6 +29,7 @@
     "lodash": "^4.17.15",
     "plotly": "^1.0.6",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "slonik": "^26.0.0"
   }
 }

@@ -1,4 +1,4 @@
-import { config } from "dotenv";
+import { config } from 'dotenv';
 
 config();
 
@@ -13,6 +13,7 @@ export interface Config {
   plotlyToken: string;
   plotlyUsername: string;
   plotlyHost: string;
+  databaseUrl: string;
 }
 
 export function getEnv(value: string) {
@@ -26,15 +27,16 @@ export function getEnv(value: string) {
 
 export const fromEnv = (): Config => {
   return {
-    discordToken: getEnv("DISCORD_TOKEN"),
-    faceitToken: getEnv("FACEIT_TOKEN"),
-    weatherToken: getEnv("WEATHER_TOKEN"),
-    stocksToken: getEnv("STOCKS_TOKEN"),
-    nasaToken: getEnv("NASA_TOKEN"),
-    imdbToken: getEnv("IMDB_TOKEN"),
-    urbanToken: getEnv("URBAN_TOKEN"),
-    plotlyToken: getEnv("PLOTLY_TOKEN"),
-    plotlyUsername: getEnv("PLOTLY_USERNAME"),
-    plotlyHost: getEnv("PLOTLY_HOST"),
+    discordToken: getEnv('DISCORD_TOKEN'),
+    faceitToken: getEnv('FACEIT_TOKEN'),
+    weatherToken: getEnv('WEATHER_TOKEN'),
+    stocksToken: getEnv('STOCKS_TOKEN'),
+    nasaToken: getEnv('NASA_TOKEN'),
+    imdbToken: getEnv('IMDB_TOKEN'),
+    urbanToken: getEnv('URBAN_TOKEN'),
+    plotlyToken: getEnv('PLOTLY_TOKEN'),
+    plotlyUsername: getEnv('PLOTLY_USERNAME'),
+    plotlyHost: getEnv('PLOTLY_HOST'),
+    databaseUrl: getEnv('DATABASE_URL'),
   };
 };

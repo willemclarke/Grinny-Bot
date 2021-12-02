@@ -3,7 +3,8 @@ import os from 'os';
 import _ from 'lodash';
 import { Faceit } from './api/faceit';
 import { getFaceitStatistics } from './commands/faceit/faceit';
-import { writeToFile, faceitUserData } from './commands/faceit/faceit-graph';
+import { FaceitService } from './commands/faceit/faceitService';
+import { displayHelpCommands } from './commands/help';
 import { WeatherAPI } from './api/weather';
 import { getWeather } from './commands/weather';
 import { StocksAPI } from './api/stocks';
@@ -22,6 +23,7 @@ import { retake } from './commands/retake';
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
+const faceitDbService = new FaceitService(config.databaseUrl);
 
 export const faceit = new Faceit(config.faceitToken);
 export const weatherAPI = new WeatherAPI(config.weatherToken);
@@ -39,14 +41,9 @@ discord.once('ready', () => {
   const pitOfSmithChannel = discord.channels.get(pitId) as Discord.TextChannel;
   const vipChannel = discord.channels.get(vipId) as Discord.TextChannel;
 
-  astronomyPicInterval(vipChannel);
   stoicQuoteInterval(vipChannel);
 
-  setInterval(() => {
-    writeToFile();
-  }, 5000);
-
-  console.log('Ready!');
+  console.log('Bot is ready!');
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
 
@@ -101,64 +98,5 @@ discord.on('message', (message) => {
     return retake(channel);
   }
 });
-
-function displayHelpCommands(
-  channel: Discord.TextChannel
-): Promise<Discord.Message | Discord.Message[]> {
-  const listOfCommands = new Discord.RichEmbed({
-    author: {
-      name: 'GrinnyBot',
-      icon_url:
-        'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
-    },
-    title: 'List of Discord Commands',
-    color: 0x7289da,
-    timestamp: new Date(),
-    fields: [
-      {
-        name: '**!stats**',
-        value: 'Faceit Statistics Command: requires <!stats csgo Faceit_Name>',
-      },
-      {
-        name: '**!weather**',
-        value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`,
-      },
-      {
-        name: '**!stocks**',
-        value: `Stock Market Information Command: requires <!stocks STOCK_SYMBOL> e.g. <!stocks TWTR>`,
-      },
-      {
-        name: '**!nasa**',
-        value: `NASA Astronomy Picture of the Day Command: simply requires <!nasa>`,
-      },
-      {
-        name: '**!urban**',
-        value: `Urban Dictionary Command: requires <!urban WORD>, spaced words require: <!urban "SPACED WORD">`,
-      },
-      {
-        name: '**!imdb**',
-        value: `IMDB Movie/series Information Command: requires <!urban Movie>, spaced words require: <!urban "Spaced Movie/Series">`,
-      },
-      {
-        name: '**!anime & !manga**',
-        value: `MyAnimeList Anime/Manga series information Command: requires: <!anime title> <!manga title>, spaced titles require: <!anime "spaced title name">`,
-      },
-      {
-        name: '**!stoic**',
-        value: 'Stoic quote generator command: requires <!stoic>',
-      },
-    ],
-  });
-
-  return channel.send(listOfCommands);
-}
-
-export function formatDiscordMessage(object: object): string {
-  return _.reduce(
-    object,
-    (acc: string[], value, key) => _.concat(acc, `${key}: ${value}`),
-    []
-  ).join('\n');
-}
 
 discord.login(config.discordToken);
