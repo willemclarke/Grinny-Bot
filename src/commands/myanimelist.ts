@@ -4,7 +4,10 @@ import { plotly } from '../index';
 import { getAnime, getManga, getAnimeStats, getMangaStats } from '../api/myanimelist';
 import { randomString } from '../utils';
 
-export async function getAnimeInfo(channel: Discord.TextChannel, args: string[]): Promise<void> {
+export async function displayAnimeInfo(
+  channel: Discord.TextChannel,
+  args: string[]
+): Promise<void> {
   try {
     if (!args.length) {
       channel.send(
@@ -13,7 +16,8 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
     } else {
       const [name] = args;
       const animeData = await getAnime(name);
-      const { url, image_url, synopsis, episodes, score, members, title, type, airing, mal_id } = animeData;
+      const { url, image_url, synopsis, episodes, score, members, title, type, airing, mal_id } =
+        animeData;
       const formattedEpisodes = episodes === 0 ? 'Unknown Episodes' : `${episodes}`;
       const formattedAiring = airing === false ? 'Finished Airing' : 'Currently Airing';
 
@@ -100,7 +104,10 @@ export async function getAnimeInfo(channel: Discord.TextChannel, args: string[])
   }
 }
 
-export async function getMangaInfo(channel: Discord.TextChannel, args: string[]): Promise<void> {
+export async function displayMangaInfo(
+  channel: Discord.TextChannel,
+  args: string[]
+): Promise<void> {
   try {
     if (!args.length) {
       channel.send(
@@ -123,7 +130,8 @@ export async function getMangaInfo(channel: Discord.TextChannel, args: string[])
         chapters,
       } = mangaData;
 
-      const formattedPublishing = publishing === false ? 'Finished Publishing' : 'Currently Publishing';
+      const formattedPublishing =
+        publishing === false ? 'Finished Publishing' : 'Currently Publishing';
       const formattedChapters = chapters === 0 ? 'Unknown Chapters' : `${chapters}`;
       const formattedVolumes = volumes === 0 ? 'Unknown Volumes' : `${volumes}`;
 

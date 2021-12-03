@@ -1,22 +1,23 @@
 import request from 'request';
+import axios from 'axios';
 
 export interface FaceitBasicResponse {
   player_id: string;
   nickname: string;
+  avatar: string;
   games: {
     csgo: {
-      skill_level_label: string;
       skill_level: number;
       faceit_elo: number;
     };
   };
   faceit_url: string;
-  errors: [
+  errors?: [
     {
       message: string;
       http_status: number | string;
     }
-  ]
+  ];
 }
 
 export interface FaceitIndividualResponse {
@@ -45,38 +46,41 @@ export class Faceit {
     this.token = token;
   }
 
-  getGeneralStats(game: string, username: string): Promise<FaceitBasicResponse> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        url: 'https://open.faceit.com/data/v4/players',
-        qs: { nickname: username, game: game },
+  async getGeneralStats(game: string, username: string): Promise<FaceitBasicResponse> {
+    const response = await axios.get(
+      `https://open.faceit.com/data/v4/players?nickname=${username}&game=${game}`,
+      {
         headers: { Authorization: `Bearer ${this.token}` },
-      };
-
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(JSON.parse(body));
-      });
-    });
+      }
+    );
+    return response.data;
   }
 
-  getPlayerStats(playerId: string, game: string): Promise<FaceitIndividualResponse> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        url: `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
+  async getPlayerStats(playerId: string, game: string): Promise<FaceitIndividualResponse> {
+    const response = await axios.get(
+      `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
+      {
         headers: { Authorization: `Bearer ${this.token}` },
-      };
-
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(JSON.parse(body));
-      });
-    });
+      }
+    );
+    return response.data;
   }
+
+  // getPlayerStats(playerId: string, game: string): Promise<FaceitIndividualResponse> {
+  //   return new Promise((resolve, reject) => {
+  //     const options = {
+  //       url: `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
+  //       headers: { Authorization: `Bearer ${this.token}` },
+  //     };
+
+  //     request(options, (error, response, body) => {
+  //       if (error) {
+  //         reject(error);
+  //       }
+  //       resolve(JSON.parse(body));
+  //     });
+  //   });
+  // }
 
   getPlayerGraphStats(playerId: string): Promise<FaceitIndividualGraphResponse> {
     return new Promise((resolve, reject) => {

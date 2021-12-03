@@ -1,8 +1,8 @@
-import Discord from "discord.js";
-import _ from "lodash";
-import { urbanAPI } from "..";
+import Discord from 'discord.js';
+import _ from 'lodash';
+import { urbanAPI } from '..';
 
-export function getUrbanDictionaryDefinition(
+export function displayUrbanDictionaryDefinition(
   channel: Discord.TextChannel,
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
@@ -16,19 +16,20 @@ export function getUrbanDictionaryDefinition(
     return urbanAPI
       .getUrbanDictionary(term)
       .then((urbanResponse) => {
-        const { word, definition, example, author, written_on, permalink, thumbs_up } = urbanResponse.list[0];
-        const formattedDate: string = _.slice(written_on, 0, 10).join("").toString();
+        const { word, definition, example, author, written_on, permalink, thumbs_up } =
+          urbanResponse.list[0];
+        const formattedDate: string = _.slice(written_on, 0, 10).join('').toString();
 
         const trimDefnition = _.truncate(definition, {
           length: 1024,
-          omission: "[...]",
+          omission: '[...]',
         });
 
         const discordUrbanResponse = new Discord.RichEmbed({
           author: {
-            name: "GrinnyBot",
+            name: 'GrinnyBot',
             icon_url:
-              "https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg",
+              'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
           },
           title: `Urban Dictionary Definition for:  ${_.upperFirst(word)}`,
           url: `${permalink}`,
@@ -41,15 +42,15 @@ export function getUrbanDictionaryDefinition(
               inline: true,
             },
             {
-              name: "**Example**",
+              name: '**Example**',
               value: example,
             },
             {
-              name: "**Author**",
+              name: '**Author**',
               value: author,
             },
             {
-              name: "**Written on**",
+              name: '**Written on**',
               value: formattedDate,
             },
           ],

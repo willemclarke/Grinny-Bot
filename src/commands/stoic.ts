@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import { getStoicQuote } from '../api/stoic';
 import _ from 'lodash';
 
-export async function stoicQuote(channel: Discord.TextChannel) {
+export async function displayStoicQuote(channel: Discord.TextChannel) {
   try {
     const quote = await getStoicQuote();
     const { text, author } = quote;
@@ -67,6 +67,6 @@ export async function stoicQuote(channel: Discord.TextChannel) {
 
 export function stoicQuoteInterval(channel: Discord.TextChannel) {
   setInterval(() => {
-    stoicQuote(channel);
+    displayStoicQuote(channel);
   }, 1000 * 60 * 60 * 12);
 }

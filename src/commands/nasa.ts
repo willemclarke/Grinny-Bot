@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import _ from 'lodash';
 import { nasaAPI } from '..';
 
-export function getAstronomyPic(
+export function displayAstronomyPic(
   channel: Discord.TextChannel
 ): Promise<void | Discord.Message | Discord.Message[]> {
   return nasaAPI
@@ -53,6 +53,6 @@ export function getAstronomyPic(
 
 export function astronomyPicInterval(channel: Discord.TextChannel) {
   setInterval(() => {
-    getAstronomyPic(channel);
+    displayAstronomyPic(channel);
   }, 1000 * 60 * 60 * 24);
 }

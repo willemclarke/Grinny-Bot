@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import _ from 'lodash';
 import { weatherAPI } from '..';
 
-export function getWeather(
+export function displayWeather(
   channel: Discord.TextChannel,
   args: string[]
 ): Promise<Discord.Message | Discord.Message[]> {
