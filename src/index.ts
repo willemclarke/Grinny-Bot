@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import os from 'os';
 import _ from 'lodash';
 import { PIT_CHANNEL_ID, PREFIX, VIP_CHANNEL_ID } from './types/constants';
-import { FaceitAPI } from './api/faceit/faceit';
+import { FaceitAPI } from './api/faceit/faceitApi';
 import { displayFaceitStatistics } from './commands/faceit';
 import { FaceitService } from './api/faceit/faceitService';
 import { displayHelpCommands } from './commands/help';
@@ -27,7 +27,7 @@ interface DiscordMessageOverride {
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
-// const faceitDbService = new FaceitService(config.databaseUrl);
+const faceitDbService = new FaceitService(config.databaseUrl);
 
 export const faceitApi = new FaceitAPI(config.faceitToken);
 export const weatherApi = new WeatherAPI(config.weatherToken);
@@ -35,14 +35,16 @@ export const nasaApi = new NasaAPI(config.nasaToken);
 export const imdbApi = new IMDBAPI(config.imdbToken);
 export const plotlyApi = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
-discord.once('ready', () => {
+discord.once('ready', async () => {
   const pitOfSmithChannel = discord.channels.get(PIT_CHANNEL_ID) as Discord.TextChannel;
   const vipChannel = discord.channels.get(VIP_CHANNEL_ID) as Discord.TextChannel;
 
+  await faceitDbService.insertElo({ username: 'm00sebreeder', rating: 2600, date: new Date() });
+  await faceitDbService.getElosForPlayer('m00sebreeder');
   stoicQuoteInterval(vipChannel);
 
   console.log('GrinnyBot is ready!');
-  pitOfSmithChannel.send(
+  await pitOfSmithChannel.send(
     codeblockMsg(`Bot has successfully started up on hostname: ${os.hostname}`)
   );
 });

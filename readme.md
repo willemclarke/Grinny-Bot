@@ -46,18 +46,6 @@
     <img src="https://i.gyazo.com/931be7bfe1f98f0587de70e33eb7e853.png">
   </p>
 
-* Seventh feature utilises unoffical Urban Dictionary API to enable users to find definitions from discord:
-
-    <p float="left">
-      <img src="https://i.gyazo.com/f91482c668107ece75cf754794c4ba3c.png">
-    </p>
-
-* Eight feature was to display stock data:
-
-  <p float="left">
-    <img src="https://i.gyazo.com/162746deaa096d8eabb6cfece2dbd15b.png">
-  </p>
-
 - Lastly, simple help command to show all existing commands:
   <p float="left">
     <img src="https://i.gyazo.com/47bddc74f5c1fb4cee5c875a6d64b8a7.png">

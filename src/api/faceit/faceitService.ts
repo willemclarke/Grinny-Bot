@@ -1,4 +1,5 @@
-import { createPool, sql } from 'slonik';
+import { createPool, DatabasePoolType, QueryResultType, sql } from 'slonik';
+import { dateTimeAsTimestamp } from './utils';
 
 interface DbElo {
   username: string;
@@ -8,19 +9,35 @@ interface DbElo {
 
 export class FaceitService {
   token: string;
+  pool: DatabasePoolType;
 
   constructor(token: string) {
     this.token = token;
+    this.pool = createPool(this.token, { ssl: { rejectUnauthorized: false } });
+  }
 
-    const pool = createPool(this.token, { ssl: { rejectUnauthorized: false } });
+  async insertElo(elo: DbElo): Promise<QueryResultType<DbElo>> {
+    const { username, rating, date } = elo;
 
-    pool.connect(async (connection) => {
-      const test = await connection.query(sql`SELECT * FROM faceit_elos`);
-      console.log(JSON.stringify(test.rows, null, 2));
+    return await this.pool.connect(async (connection) => {
+      return await connection.query<DbElo>(
+        sql`INSERT INTO faceit_elos (username, elo, date) VALUES (${username}, ${rating}, ${dateTimeAsTimestamp(
+          date
+        )})`
+      );
     });
   }
 
-  // insertElo(elo: DbElo): Promise<DbElo>
+  async getElosForPlayer(username: string): Promise<readonly DbElo[]> {
+    return this.pool.connect(async (connection) => {
+      const userElos = await connection.query<DbElo>(
+        sql`SELECT * from faceit_elos WHERE username IN (${username})`
+      );
+      console.log(userElos.rows);
+      return userElos.rows;
+    });
+  }
+
   // getElosForPlayer(userId: string): Promise<DbElo[]>
   // syncElos
 }
