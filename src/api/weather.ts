@@ -1,4 +1,4 @@
-import request from "request";
+import axios from 'axios';
 
 export interface WeatherResponse {
   weather: [
@@ -31,18 +31,10 @@ export class WeatherAPI {
     this.token = token;
   }
 
-  getWeather(cityName: string): Promise<WeatherResponse> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        url: `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${this.token}`
-      };
-
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(JSON.parse(body));
-      });
-    });
+  async getWeather(cityName: string): Promise<WeatherResponse> {
+    const response = await axios.get(
+      `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${this.token}`
+    );
+    return response.data;
   }
 }

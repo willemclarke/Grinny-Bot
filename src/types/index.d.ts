@@ -1,1 +1,1 @@
-declare module "plotly";
+declare module 'plotly';

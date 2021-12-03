@@ -1,45 +1,43 @@
 import Discord from 'discord.js';
 import { getStoicQuote } from '../api/stoic';
 import _ from 'lodash';
+import { codeblockMsg } from '../utils';
+import { GRINNY_BOT_ICON } from '../types/constants';
 
-export async function stoicQuote(channel: Discord.TextChannel) {
+const philosopherInfo = {
+  marcusAurelius: {
+    image:
+      'https://www.biography.com/.image/t_share/MTE5NDg0MDU0ODg3Njk1ODg3/marcus-aurelius-9192657-1-402.jpg',
+    link: 'https://en.wikipedia.org/wiki/Marcus_Aurelius',
+  },
+  seneca: {
+    image:
+      'https://www.thoughtco.com/thmb/7BlgoGGgq_eooln3xcXJ3-jYE64=/768x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-1048461504-4e7e718691924af9a07bbf4b2b81d72f.jpg',
+    link: 'https://en.wikipedia.org/wiki/Seneca_the_Younger',
+  },
+  epictetus: {
+    image:
+      'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/hostedimages/1507496989i/24121395._SY540_.jpg',
+    link: 'https://en.wikipedia.org/wiki/Epictetus',
+  },
+};
+
+export async function displayStoicQuote(channel: Discord.TextChannel) {
   try {
     const quote = await getStoicQuote();
     const { text, author } = quote;
 
-    const philosopherImages = {
-      marcusAurelius:
-        'https://www.biography.com/.image/t_share/MTE5NDg0MDU0ODg3Njk1ODg3/marcus-aurelius-9192657-1-402.jpg',
-      seneca: 'https://www.thoughtco.com/thmb/7BlgoGGgq_eooln3xcXJ3-jYE64=/768x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-1048461504-4e7e718691924af9a07bbf4b2b81d72f.jpg',
-      epictetus: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/hostedimages/1507496989i/24121395._SY540_.jpg',
-    };
-
-    const philosopherLinks = {
-      marcusAurelius: 'https://en.wikipedia.org/wiki/Marcus_Aurelius',
-      seneca: 'https://en.wikipedia.org/wiki/Seneca_the_Younger',
-      epictetus: 'https://en.wikipedia.org/wiki/Epictetus',
-    };
-
-    const matchingImage = (author: string): string => {
-      if (author === 'Seneca') {
-        return philosopherImages.seneca;
-      } else if (author === 'Marcus Aurelius') {
-        return philosopherImages.marcusAurelius;
-      } else if (author === 'Epictetus') {
-        return philosopherImages.epictetus;
+    const matchingData = (philosopher: typeof author) => {
+      switch (philosopher) {
+        case 'Marcus Aurelius':
+          return philosopherInfo.marcusAurelius;
+        case 'Epictetus':
+          return philosopherInfo.epictetus;
+        case 'Seneca':
+          return philosopherInfo.seneca;
+        default:
+          return philosopher;
       }
-      return author;
-    };
-
-    const matchingPhilosopherLink = (author: string): string => {
-      if (author === 'Seneca') {
-        return philosopherLinks.seneca;
-      } else if (author === 'Marcus Aurelius') {
-        return philosopherLinks.marcusAurelius;
-      } else if (author === 'Epictetus') {
-        return philosopherLinks.epictetus;
-      }
-      return author;
     };
 
     const discordQuoteResponse = new Discord.RichEmbed({
@@ -47,24 +45,22 @@ export async function stoicQuote(channel: Discord.TextChannel) {
       timestamp: new Date(),
       author: {
         name: 'GrinnyBot',
-        icon_url:
-          'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
+        icon_url: GRINNY_BOT_ICON,
       },
       thumbnail: {
-        url: matchingImage(author),
+        url: matchingData(author).image,
       },
-      description: `"${text}" - [**${author}**](${matchingPhilosopherLink(author)})`,
+      description: `"${text}" - [**${author}**](${matchingData(author).link})`,
     });
 
     await channel.send(discordQuoteResponse);
   } catch (err) {
-    console.log(err);
-    channel.send(`\`\`\`${err}\`\`\``);
+    await channel.send(codeblockMsg(`${err}`));
   }
 }
 
 export function stoicQuoteInterval(channel: Discord.TextChannel) {
   setInterval(() => {
-    stoicQuote(channel);
-  }, 1000 * 60 * 60 * 8);
+    displayStoicQuote(channel);
+  }, 1000 * 60 * 60 * 12);
 }

@@ -10,12 +10,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "develop": "ts-node-dev src/index.ts",
+    "develop": "DATABASE_URL=$(heroku config:get DATABASE_URL -a grinny-bot) ts-node-dev src/index.ts",
+    "pgcli": "pgcli -D grinny-heroku",
     "compile": "tsc --noEmit"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.149",
     "@types/node": "^12.12.6",
     "@types/request-promise": "^4.1.45",
@@ -24,10 +26,10 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "discord.js": "^11.5.1",
     "lodash": "^4.17.15",
     "plotly": "^1.0.6",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "slonik": "^26.0.0"
   }
 }

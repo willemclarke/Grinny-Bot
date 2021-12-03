@@ -1,4 +1,4 @@
-import request from "request";
+import axios from 'axios';
 
 export interface ImdbResponse {
   Title: string;
@@ -12,12 +12,14 @@ export interface ImdbResponse {
   Plot: string;
   Awards: string;
   Poster: string;
-  Ratings: [{ Source: string; Value: string }, { Source: string; Value: string }, { Source: string; Value: string }];
+  Ratings: [
+    { Source: string; Value: string },
+    { Source: string; Value: string },
+    { Source: string; Value: string }
+  ];
   imdbRating: string;
   imdbVotes: string;
   imdbID: string;
-  Response: string;
-  Error: string;
 }
 
 export class IMDBAPI {
@@ -26,19 +28,10 @@ export class IMDBAPI {
   constructor(token: string) {
     this.token = token;
   }
-
-  getImdbData(title: string): Promise<ImdbResponse> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        url: `http://www.omdbapi.com/?t=${title}&plot=full&apikey=${this.token}`
-      };
-
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(JSON.parse(body));
-      });
-    });
+  async getImdbData(title: string): Promise<ImdbResponse> {
+    const response = await axios.get(
+      `http://www.omdbapi.com/?t=${title}&plot=full&apikey=${this.token}`
+    );
+    return response.data;
   }
 }
