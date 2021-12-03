@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
 import { weatherApi } from '..';
+import { GRINNY_BOT_ICON } from '../types/constants';
 import { codeblockMsg } from '../utils';
 
 export const displayWeather = async (
@@ -29,8 +30,7 @@ export const displayWeather = async (
     const discordWeatherResponse = new Discord.RichEmbed({
       author: {
         name: 'GrinnyBot',
-        icon_url:
-          'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
+        icon_url: GRINNY_BOT_ICON,
       },
       title: `Weather for ${_.upperFirst(cityName)}`,
       color: 0x7289da,

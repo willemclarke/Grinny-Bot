@@ -1,4 +1,3 @@
-import rp from 'request-promise';
 import axios from 'axios';
 
 interface MALSearchAnimeResponse {

@@ -1,15 +1,11 @@
-import rp from "request-promise";
+import axios from 'axios';
 
 interface StoicResponse {
   text: string;
-  author: string;
+  author: 'Seneca' | 'Epictetus' | 'Marcus Aurelius';
 }
 
 export async function getStoicQuote(): Promise<StoicResponse> {
-  const options = {
-    url: `https://stoic-quotes.com/api/quote`,
-    json: true
-  }
-  return await rp(options)
+  const response = await axios.get(`https://stoic-quotes.com/api/quote`);
+  return response.data;
 }
-

@@ -1,113 +1,101 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
 import { imdbApi } from '..';
+import { GRINNY_BOT_ICON } from '../types/constants';
+import { codeblockMsg } from '../utils';
 
-export function displayImdbInfo(
+export const displayImdbInfo = async (
   channel: Discord.TextChannel,
   args: string[]
-): Promise<Discord.Message | Discord.Message[]> {
-  if (!args.length) {
-    return channel.send(
-      `\`\`\`You didn't provide enough arguments: requires: <!imdb movie_show_title>, spaced movie/film names require: <!imdb "movie show title">\`\`\``
-    );
-  } else {
+): Promise<Discord.Message | Discord.Message[]> => {
+  try {
+    if (!args.length) {
+      return channel.send(
+        `\`\`\`You didn't provide enough arguments: requires: <!imdb movie_show_title>, spaced movie/film names require: <!imdb "movie show title">\`\`\``
+      );
+    }
     const [title] = args;
 
-    return imdbApi.getImdbData(title).then((imdbResponse) => {
-      const {
-        Title,
-        Rated,
-        Released,
-        Type,
-        Runtime,
-        Genre,
-        Director,
-        Actors,
-        Plot,
-        Awards,
-        Poster,
-        imdbRating,
-        imdbVotes,
-        imdbID,
-        Ratings,
-        Response,
-        Error,
-      } = imdbResponse;
+    const imdbData = await imdbApi.getImdbData(title);
+    const checkDirectorExists = imdbData.Director === 'N/A' ? 'Unable to Fetch' : imdbData.Director;
 
-      if (Response && Response === 'False') {
-        return channel.send(
-          `\`\`\`${Error} --> Please ensure correct spelling of the movie/series! Movie/seriess with spaced names require double quotes: <!imdb "Spaced Name">\`\`\``
-        );
-      }
+    const checkRottenTomatoesExists =
+      imdbData.Ratings[1] && imdbData.Ratings[1].Value
+        ? imdbData.Ratings[1].Value
+        : 'Unable to Fetch ';
 
-      const checkDirectorExists = Director === 'N/A' ? 'Unable to Fetch' : Director;
-      const checkRottenTomatoesExists =
-        Ratings[1] && Ratings[1].Value ? Ratings[1].Value : 'Unable to Fetch ';
-      const checkMetaCriticExists =
-        Ratings[2] && Ratings[2].Value ? Ratings[2].Value : 'Unable to Fetch';
-      const changeRunTimeFormatDependingOnMovieType =
-        Type === 'series'
-          ? `${_.upperFirst(Type)}, ${Runtime} per episode`
-          : `${_.upperFirst(Type)}, ${Runtime}`;
+    const checkMetaCriticExists =
+      imdbData.Ratings[2] && imdbData.Ratings[2].Value
+        ? imdbData.Ratings[2].Value
+        : 'Unable to Fetch';
 
-      const discordImdbResponse = new Discord.RichEmbed({
-        color: 0x7289da,
-        timestamp: new Date(),
-        author: {
-          name: 'GrinnyBot',
-          icon_url:
-            'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
+    const changeRunTimeFormatDependingOnMovieType =
+      imdbData.Type === 'series'
+        ? `${_.upperFirst(imdbData.Type)}, ${imdbData.Runtime} per episode`
+        : `${_.upperFirst(imdbData.Type)}, ${imdbData.Runtime}`;
+
+    const discordImdbResponse = new Discord.RichEmbed({
+      color: 0x7289da,
+      timestamp: new Date(),
+      author: {
+        name: 'GrinnyBot',
+        icon_url: GRINNY_BOT_ICON,
+      },
+      title: `IMDB Information for ${imdbData.Title}`,
+      description: imdbData.Plot,
+      url: `https://www.imdb.com/title/${imdbData.imdbID}/`,
+      thumbnail: {
+        url: 'https://cdn0.iconfinder.com/data/icons/social-media-2091/100/social-31-512.png',
+      },
+      fields: [
+        {
+          name: '**Directed by**',
+          value: checkDirectorExists,
         },
-        title: `IMDB Information for ${Title}`,
-        description: Plot,
-        url: `https://www.imdb.com/title/${imdbID}/`,
-        thumbnail: {
-          url: 'https://cdn0.iconfinder.com/data/icons/social-media-2091/100/social-31-512.png',
+        {
+          name: '**Main Cast**',
+          value: imdbData.Actors,
         },
-        fields: [
-          {
-            name: '**Directed by**',
-            value: checkDirectorExists,
-          },
-          {
-            name: '**Main Cast**',
-            value: Actors,
-          },
-          {
-            name: '**Released on**',
-            value: Released,
-          },
-          {
-            name: '**Genre and Rating**',
-            value: `${Genre} - ${Rated}`,
-          },
-          {
-            name: '**Film Type and Runtime**',
-            value: changeRunTimeFormatDependingOnMovieType,
-          },
-          {
-            name: '**IMDB Rating**',
-            value: `${imdbRating}/10 from ${imdbVotes} votes`,
-          },
-          {
-            name: '**Rotten Tomatoes Score**',
-            value: checkRottenTomatoesExists,
-          },
-          {
-            name: '**Metacritic Score**',
-            value: checkMetaCriticExists,
-          },
-          {
-            name: '**Awards**',
-            value: Awards,
-          },
-        ],
-        image: {
-          url: Poster,
+        {
+          name: '**Released on**',
+          value: imdbData.Released,
         },
-      });
-
-      return channel.send(discordImdbResponse);
+        {
+          name: '**Genre and Rating**',
+          value: `${imdbData.Genre} - ${imdbData.Rated}`,
+        },
+        {
+          name: '**Film Type and Runtime**',
+          value: changeRunTimeFormatDependingOnMovieType,
+        },
+        {
+          name: '**IMDB Rating**',
+          value: `${imdbData.imdbRating}/10 from ${imdbData.imdbVotes} votes`,
+        },
+        {
+          name: '**Rotten Tomatoes Score**',
+          value: checkRottenTomatoesExists,
+        },
+        {
+          name: '**Metacritic Score**',
+          value: checkMetaCriticExists,
+        },
+        {
+          name: '**Awards**',
+          value: imdbData.Awards,
+        },
+      ],
+      image: {
+        url: imdbData.Poster,
+      },
     });
+
+    return channel.send(discordImdbResponse);
+  } catch (error) {
+    return await channel.send(
+      codeblockMsg(
+        `${error} -> Please ensure correct spelling of the movie/series! Movie/seriess with spaced names require double quotes: <!imdb "Spaced Name">`
+      )
+    );
   }
-}
+};

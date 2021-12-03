@@ -1,6 +1,6 @@
-import request from "request";
+import axios from 'axios';
 
-export interface NasaAPOTDResponse {
+export interface NasaResponse {
   copyright: string;
   date: string;
   title: string;
@@ -17,18 +17,8 @@ export class NasaAPI {
     this.token = token;
   }
 
-  getAPOTD(): Promise<NasaAPOTDResponse> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        url: `https://api.nasa.gov/planetary/apod?api_key=${this.token}`,
-      };
-
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(JSON.parse(body));
-      });
-    });
+  async getNasaData(): Promise<NasaResponse> {
+    const response = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${this.token}`);
+    return response.data;
   }
 }

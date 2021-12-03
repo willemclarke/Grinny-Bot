@@ -1,4 +1,5 @@
 import Discord from 'discord.js';
+import { GRINNY_BOT_ICON } from '../types/constants';
 
 export const displayHelpCommands = async (
   channel: Discord.TextChannel
@@ -6,8 +7,7 @@ export const displayHelpCommands = async (
   const listOfCommands = new Discord.RichEmbed({
     author: {
       name: 'GrinnyBot',
-      icon_url:
-        'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
+      icon_url: GRINNY_BOT_ICON,
     },
     title: 'List of Discord Commands',
     color: 0x7289da,
@@ -24,10 +24,6 @@ export const displayHelpCommands = async (
       {
         name: '**!nasa**',
         value: `NASA Astronomy Picture of the Day Command: simply requires <!nasa>`,
-      },
-      {
-        name: '**!urban**',
-        value: `Urban Dictionary Command: requires <!urban WORD>, spaced words require: <!urban "SPACED WORD">`,
       },
       {
         name: '**!imdb**',

@@ -1,5 +1,5 @@
-import plotly from "plotly";
-import fs from "fs";
+import plotly from 'plotly';
+import fs from 'fs';
 
 interface PlotlyData {
   x: number[];
@@ -35,7 +35,12 @@ export class Plotly {
     this.plotly = plotly({ username: username, apiKey: apiKey, host: host });
   }
 
-  createGraph(data: PlotlyData, layout: PlotlyLayout, imgOpts: PlotlyImageOptions, fileName: string) {
+  createGraph(
+    data: PlotlyData,
+    layout: PlotlyLayout,
+    imgOpts: PlotlyImageOptions,
+    fileName: string
+  ) {
     return new Promise(async (resolve, reject) => {
       try {
         const figure = { data: [data], layout };
@@ -46,7 +51,7 @@ export class Plotly {
             reject(error);
           }
           const writeStream = fs.createWriteStream(fileName);
-          imageStream.pipe(writeStream).on("finish", () => {
+          imageStream.pipe(writeStream).on('finish', () => {
             resolve();
           });
         });

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { plotlyApi } from '../index';
 import { getAnime, getManga, getAnimeStats, getMangaStats } from '../api/myanimelist';
 import { codeblockMsg, randomString } from '../utils';
+import { GRINNY_BOT_ICON } from '../types/constants';
 
 export const displayAnimeInfo = async (
   channel: Discord.TextChannel,
@@ -64,8 +65,7 @@ export const displayAnimeInfo = async (
       timestamp: new Date(),
       author: {
         name: 'GrinnyBot',
-        icon_url:
-          'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
+        icon_url: GRINNY_BOT_ICON,
       },
       title: `MyAnimeList Information for ${title} (${type}) `,
       url,
@@ -180,8 +180,7 @@ export const displayMangaInfo = async (
       timestamp: new Date(),
       author: {
         name: 'GrinnyBot',
-        icon_url:
-          'https://66.media.tumblr.com/ba12736d298c09db7e4739428a23f8ab/tumblr_pki4rks2wq1tnbbg0_400.jpg',
+        icon_url: GRINNY_BOT_ICON,
       },
       title: `MyAnimeList Information for ${title} (${type}) `,
       url,
