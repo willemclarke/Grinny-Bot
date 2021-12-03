@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { faceit } from '../..';
+import { faceitApi } from '..';
+import { codeblockMsg } from '../utils';
 
 export const displayFaceitStatistics = async (
   channel: Discord.TextChannel,
@@ -8,18 +9,18 @@ export const displayFaceitStatistics = async (
 ): Promise<Discord.Message | Discord.Message[]> => {
   if (args.length !== 2) {
     return channel.send(
-      `\`\`\`You didn't provide enough arguments: requires: !stats csgo <faceit_alias>\`\`\``
+      codeblockMsg("You didn't provide enough arguments: requires: !stats csgo <faceit_alias>")
     );
   }
   const [game, username] = args;
 
   try {
-    const generalStats = await faceit.getGeneralStats(game, username);
+    const generalStats = await faceitApi.getGeneralStats(game, username);
 
     const { player_id, nickname, avatar, games } = generalStats;
     const { skill_level, faceit_elo } = games.csgo;
 
-    const playerStats = await faceit.getPlayerStats(player_id, game);
+    const playerStats = await faceitApi.getPlayerStats(player_id, game);
     const discordStatsResponse = new Discord.RichEmbed({
       author: {
         name: 'GrinnyBot',
@@ -68,7 +69,7 @@ export const displayFaceitStatistics = async (
     return channel.send(discordStatsResponse);
   } catch (error) {
     return channel.send(
-      `\`\`\`${error} --> Make sure !stats csgo <faceit_alias_is_correct!>\`\`\``
+      codeblockMsg(`${error} --> Make sure !stats csgo <faceit_alias_is_correct!>`)
     );
   }
 };

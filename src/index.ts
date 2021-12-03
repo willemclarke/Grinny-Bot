@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
 import os from 'os';
 import _ from 'lodash';
-import { Faceit } from './api/faceit/faceit';
-import { displayFaceitStatistics } from './commands/faceit/faceit';
+import { FaceitAPI } from './api/faceit/faceit';
+import { displayFaceitStatistics } from './commands/faceit';
 import { FaceitService } from './api/faceit/faceitService';
 import { displayHelpCommands } from './commands/help';
 import { WeatherAPI } from './api/weather';
@@ -23,12 +23,12 @@ const config: Config = fromEnv();
 const discord = new Discord.Client();
 // const faceitDbService = new FaceitService(config.databaseUrl);
 
-export const faceit = new Faceit(config.faceitToken);
-export const weatherAPI = new WeatherAPI(config.weatherToken);
-export const nasaAPI = new NasaAPI(config.nasaToken);
-export const urbanAPI = new UrbanAPI(config.urbanToken);
-export const imdbAPI = new IMDBAPI(config.imdbToken);
-export const plotly = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
+export const faceitApi = new FaceitAPI(config.faceitToken);
+export const weatherApi = new WeatherAPI(config.weatherToken);
+export const nasaApi = new NasaAPI(config.nasaToken);
+export const urbanApi = new UrbanAPI(config.urbanToken);
+export const imdbApi = new IMDBAPI(config.imdbToken);
+export const plotlyApi = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
 const pitId: string = '642229195405131776';
 const vipId: string = '444358361098616833';
@@ -44,7 +44,7 @@ discord.once('ready', () => {
   pitOfSmithChannel.send(`\`\`\`Bot has successfully started up on hostname: ${os.hostname}\`\`\``);
 });
 
-discord.on('message', (message) => {
+discord.on('message', async (message) => {
   const { channel, content, author } = <
     { channel: Discord.TextChannel; content: string; author: Discord.User }
   >message;
@@ -66,11 +66,11 @@ discord.on('message', (message) => {
   }
 
   if (command === 'help') {
-    return displayHelpCommands(channel);
+    return await displayHelpCommands(channel);
   } else if (command === 'stats') {
-    return displayFaceitStatistics(channel, args);
+    return await displayFaceitStatistics(channel, args);
   } else if (command === 'weather') {
-    return displayWeather(channel, args);
+    return await displayWeather(channel, args);
   } else if (command === 'nasa') {
     return displayAstronomyPic(channel);
   } else if (command === 'urban') {

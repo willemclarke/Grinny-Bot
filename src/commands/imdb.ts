@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { imdbAPI } from '..';
+import { imdbApi } from '..';
 
 export function displayImdbInfo(
   channel: Discord.TextChannel,
@@ -13,7 +13,7 @@ export function displayImdbInfo(
   } else {
     const [title] = args;
 
-    return imdbAPI.getImdbData(title).then((imdbResponse) => {
+    return imdbApi.getImdbData(title).then((imdbResponse) => {
       const {
         Title,
         Rated,

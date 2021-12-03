@@ -1,11 +1,11 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { nasaAPI } from '..';
+import { nasaApi } from '..';
 
 export function displayAstronomyPic(
   channel: Discord.TextChannel
 ): Promise<void | Discord.Message | Discord.Message[]> {
-  return nasaAPI
+  return nasaApi
     .getAPOTD()
     .then((nasaResponse) => {
       const { copyright, title, url, code, msg, explanation } = nasaResponse;

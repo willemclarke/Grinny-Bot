@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { urbanAPI } from '..';
+import { urbanApi } from '..';
 
 export function displayUrbanDictionaryDefinition(
   channel: Discord.TextChannel,
@@ -13,7 +13,7 @@ export function displayUrbanDictionaryDefinition(
   } else {
     const [term] = args;
 
-    return urbanAPI
+    return urbanApi
       .getUrbanDictionary(term)
       .then((urbanResponse) => {
         const { word, definition, example, author, written_on, permalink, thumbs_up } =

@@ -1,4 +1,3 @@
-import request from 'request';
 import axios from 'axios';
 
 export interface FaceitBasicResponse {
@@ -30,16 +29,7 @@ export interface FaceitIndividualResponse {
   };
 }
 
-export interface FaceitIndividualGraphResponse {
-  nickname: string;
-  games: {
-    csgo: {
-      faceit_elo: number;
-    };
-  };
-}
-
-export class Faceit {
+export class FaceitAPI {
   token: string;
 
   constructor(token: string) {
@@ -66,35 +56,12 @@ export class Faceit {
     return response.data;
   }
 
-  // getPlayerStats(playerId: string, game: string): Promise<FaceitIndividualResponse> {
-  //   return new Promise((resolve, reject) => {
-  //     const options = {
-  //       url: `https://open.faceit.com/data/v4/players/${playerId}/stats/${game}`,
-  //       headers: { Authorization: `Bearer ${this.token}` },
-  //     };
-
-  //     request(options, (error, response, body) => {
-  //       if (error) {
-  //         reject(error);
-  //       }
-  //       resolve(JSON.parse(body));
-  //     });
-  //   });
-  // }
-
-  getPlayerGraphStats(playerId: string): Promise<FaceitIndividualGraphResponse> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        url: `https://open.faceit.com/data/v4/players/${playerId}`,
-        headers: { Authorization: `Bearer ${this.token}` },
-      };
-
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        resolve(JSON.parse(body));
-      });
+  async getPlayerGraphStats(
+    playerId: string
+  ): Promise<Pick<FaceitBasicResponse, 'nickname' | 'games'>> {
+    const response = await axios.get(`https://open.faceit.com/data/v4/players/${playerId}`, {
+      headers: { Authorization: `Bearer ${this.token}` },
     });
+    return response.data;
   }
 }

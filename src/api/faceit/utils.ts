@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { faceit } from '../..';
+import { faceitApi } from '../..';
 
 async function getFaceitUserId(
   game: string,
   username: string
 ): Promise<{ username: string; rating: number; playerId: string }> {
-  const userId = await faceit.getGeneralStats(game, username);
+  const userId = await faceitApi.getGeneralStats(game, username);
 
   return {
     username: userId.nickname,
@@ -15,7 +15,7 @@ async function getFaceitUserId(
 }
 
 async function getFaceitUserElo(playerId: string): Promise<{ username: string; rating: number }> {
-  const data = await faceit.getPlayerGraphStats(playerId);
+  const data = await faceitApi.getPlayerGraphStats(playerId);
 
   return {
     username: data.nickname,

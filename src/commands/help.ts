@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 
-export const displayHelpCommands = (
+export const displayHelpCommands = async (
   channel: Discord.TextChannel
 ): Promise<Discord.Message | Discord.Message[]> => {
   const listOfCommands = new Discord.RichEmbed({
@@ -20,10 +20,6 @@ export const displayHelpCommands = (
       {
         name: '**!weather**',
         value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`,
-      },
-      {
-        name: '**!stocks**',
-        value: `Stock Market Information Command: requires <!stocks STOCK_SYMBOL> e.g. <!stocks TWTR>`,
       },
       {
         name: '**!nasa**',

@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { plotly } from '../index';
+import { plotlyApi } from '../index';
 import { getAnime, getManga, getAnimeStats, getMangaStats } from '../api/myanimelist';
 import { randomString } from '../utils';
 
@@ -53,7 +53,7 @@ export async function displayAnimeInfo(
       };
 
       const fileName = `${randomString(16)}.png`;
-      await plotly.createGraph(data, layout, imgOpts, fileName);
+      await plotlyApi.createGraph(data, layout, imgOpts, fileName);
 
       const discordAnimeResponse = new Discord.RichEmbed({
         color: 0x7289da,
@@ -96,7 +96,7 @@ export async function displayAnimeInfo(
         files: [{ attachment: fileName, name: fileName }],
       });
 
-      plotly.deleteFile(fileName);
+      plotlyApi.deleteFile(fileName);
     }
   } catch (err) {
     console.log(err);
@@ -166,7 +166,7 @@ export async function displayMangaInfo(
       };
 
       const fileName = `${randomString(16)}.png`;
-      await plotly.createGraph(data, layout, imgOpts, fileName);
+      await plotlyApi.createGraph(data, layout, imgOpts, fileName);
 
       const discordMangaResponse = new Discord.RichEmbed({
         color: 0x7289da,
@@ -213,7 +213,7 @@ export async function displayMangaInfo(
         files: [{ attachment: fileName, name: fileName }],
       });
 
-      plotly.deleteFile(fileName);
+      plotlyApi.deleteFile(fileName);
     }
   } catch (err) {
     console.log(err);
