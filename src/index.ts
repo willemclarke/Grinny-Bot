@@ -3,7 +3,7 @@ import os from 'os';
 import _ from 'lodash';
 import { PIT_CHANNEL_ID, PREFIX, VIP_CHANNEL_ID } from './types/constants';
 import { FaceitAPI } from './api/faceit/faceitApi';
-import { displayFaceitStatistics } from './commands/faceit';
+import { displayFaceitStatistics } from './commands/faceit/displayFaceitStatistics';
 import { FaceitService } from './api/faceit/faceitService';
 import { displayHelpCommands } from './commands/help';
 import { WeatherAPI } from './api/weather';
@@ -41,12 +41,13 @@ discord.once('ready', async () => {
 
   await faceitDbService.insertElo({ username: 'm00sebreeder', rating: 2600, date: new Date() });
   await faceitDbService.getElosForPlayer('m00sebreeder');
-  stoicQuoteInterval(vipChannel);
 
   console.log('GrinnyBot is ready!');
   await pitOfSmithChannel.send(
     codeblockMsg(`Bot has successfully started up on hostname: ${os.hostname}`)
   );
+
+  stoicQuoteInterval(vipChannel);
 });
 
 discord.on('message', async (message) => {
@@ -75,17 +76,17 @@ discord.on('message', async (message) => {
   } else if (command === 'weather') {
     return await displayWeather(channel, args);
   } else if (command === 'nasa') {
-    return displayAstronomyPic(channel);
+    return await displayAstronomyPic(channel);
   } else if (command === 'imdb') {
-    return displayImdbInfo(channel, args);
+    return await displayImdbInfo(channel, args);
   } else if (command === 'anime') {
-    return displayAnimeInfo(channel, args);
+    return await displayAnimeInfo(channel, args);
   } else if (command === 'manga') {
-    return displayMangaInfo(channel, args);
+    return await displayMangaInfo(channel, args);
   } else if (command === 'stoic') {
-    return displayStoicQuote(channel);
+    return await displayStoicQuote(channel);
   } else if (command === 'retake') {
-    return retake(channel);
+    return await retake(channel);
   }
 });
 

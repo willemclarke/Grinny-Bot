@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { faceitApi } from '..';
-import { GRINNY_BOT_ICON } from '../types/constants';
-import { codeblockMsg } from '../utils';
+import { faceitApi } from '../..';
+import { GRINNY_BOT_ICON } from '../../types/constants';
+import { codeblockMsg } from '../../utils';
 
 export const displayFaceitStatistics = async (
   channel: Discord.TextChannel,

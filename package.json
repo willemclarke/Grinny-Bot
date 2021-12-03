@@ -17,7 +17,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/date-fns": "^2.6.0",
     "@types/lodash": "^4.14.149",
     "@types/node": "16.11.11",
     "@types/pg": "^8.6.1",

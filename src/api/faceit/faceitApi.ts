@@ -66,7 +66,7 @@ export class FaceitAPI {
     return response.data;
   }
 
-  // Specific functions that use FaceitAPI methods
+  // Specific functions that use FaceitAPI functions
 
   async getFaceitUserElo(playerId: string): Promise<{ username: string; rating: number }> {
     const data = await this.getPlayerGraphStats(playerId);
@@ -107,7 +107,7 @@ export class FaceitAPI {
         },
         {}
       );
-      console.log({ playerElos: [playerElos] });
+      console.log({ playerElos });
 
       return playerElos;
     } catch (error) {
