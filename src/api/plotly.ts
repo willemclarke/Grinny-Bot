@@ -51,9 +51,7 @@ export class Plotly {
             reject(error);
           }
           const writeStream = fs.createWriteStream(fileName);
-          imageStream.pipe(writeStream).on('finish', () => {
-            resolve();
-          });
+          imageStream.pipe(writeStream).on('finish', resolve);
         });
       } catch (err) {
         console.log(err);
