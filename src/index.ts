@@ -27,7 +27,6 @@ interface DiscordMessageOverride {
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
-const faceitDbService = new FaceitService(config.databaseUrl);
 
 export const faceitApi = new FaceitAPI(config.faceitToken);
 export const weatherApi = new WeatherAPI(config.weatherToken);
@@ -35,18 +34,19 @@ export const nasaApi = new NasaAPI(config.nasaToken);
 export const imdbApi = new IMDBAPI(config.imdbToken);
 export const plotlyApi = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
+// TODO: instaniate DB connection/pool here, pass into faceitDbService
+const faceitDbService = new FaceitService(config.databaseUrl, faceitApi);
+
 discord.once('ready', async () => {
   const pitOfSmithChannel = discord.channels.get(PIT_CHANNEL_ID) as Discord.TextChannel;
   const vipChannel = discord.channels.get(VIP_CHANNEL_ID) as Discord.TextChannel;
-
-  await faceitDbService.insertElo({ username: 'm00sebreeder', rating: 2600, date: new Date() });
-  await faceitDbService.getElosForPlayer('m00sebreeder');
 
   console.log('GrinnyBot is ready!');
   await pitOfSmithChannel.send(
     codeblockMsg(`Bot has successfully started up on hostname: ${os.hostname}`)
   );
 
+  faceitDbService.pollFaceitElos();
   stoicQuoteInterval(vipChannel);
 });
 

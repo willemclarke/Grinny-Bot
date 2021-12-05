@@ -5,9 +5,7 @@ export const dateTimeAsTimestamp = (
   dateObj: Date | null
 ): TaggedTemplateLiteralInvocationType<QueryResultRowType> => {
   if (dateObj) {
-    const x = sql`TO_TIMESTAMP(${dateObj.getMilliseconds()})`;
-    console.log('sql to timestamp: ', x);
-    return sql`TO_TIMESTAMP(${dateObj.getMilliseconds()})`;
+    return sql`TO_TIMESTAMP(${dateObj.getTime()} / 1000.0)`;
   } else {
     return sql`null`;
   }
