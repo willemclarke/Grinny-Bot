@@ -58,7 +58,9 @@ export class FaceitAPI {
     return response.data;
   }
 
-  async getPlayerById(playerId: string): Promise<Pick<FaceitBasicResponse, 'nickname' | 'games'>> {
+  async getPlayerById(
+    playerId: string
+  ): Promise<Pick<FaceitBasicResponse, 'nickname' | 'games' | 'player_id'>> {
     const response = await axios.get(`https://open.faceit.com/data/v4/players/${playerId}`, {
       headers: { Authorization: `Bearer ${this.token}` },
     });
@@ -68,10 +70,11 @@ export class FaceitAPI {
   // specific functions that use FaceitAPI functions
   async getFaceitPlayer(
     playerId: string
-  ): Promise<{ username: string; rating: number; date: Date }> {
+  ): Promise<{ id: string; username: string; rating: number; date: Date }> {
     const data = await this.getPlayerById(playerId);
 
     return {
+      id: data.player_id,
       username: data.nickname,
       rating: data.games.csgo.faceit_elo,
       date: new Date(),

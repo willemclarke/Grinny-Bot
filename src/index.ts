@@ -18,6 +18,7 @@ import { fromEnv, Config } from './config';
 import { Plotly } from './api/plotly';
 import { retake } from './commands/retake';
 import { codeblockMsg } from './utils';
+import { createPool } from 'slonik';
 
 interface DiscordMessageOverride {
   channel: Discord.TextChannel;
@@ -34,8 +35,8 @@ export const nasaApi = new NasaAPI(config.nasaToken);
 export const imdbApi = new IMDBAPI(config.imdbToken);
 export const plotlyApi = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
-// TODO: instaniate DB connection/pool here, pass into faceitDbService
-const faceitDbService = new FaceitService(config.databaseUrl, faceitApi);
+const databasePool = createPool(config.databaseUrl, { ssl: { rejectUnauthorized: false } });
+const faceitDbService = new FaceitService(config.databaseUrl, faceitApi, databasePool);
 
 discord.once('ready', async () => {
   const pitOfSmithChannel = discord.channels.get(PIT_CHANNEL_ID) as Discord.TextChannel;

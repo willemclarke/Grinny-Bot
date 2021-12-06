@@ -1,4 +1,4 @@
-import { createPool, DatabasePoolType, QueryResultType, sql } from 'slonik';
+import { createPool, DatabaseConnectionType, DatabasePoolType, QueryResultType, sql } from 'slonik';
 import { FaceitAPI } from './faceitApi';
 import { dateTimeAsTimestamp } from './utils';
 import { schedule } from 'node-cron';
@@ -7,6 +7,7 @@ export interface Player {
   username: string;
   rating: number;
   date: Date;
+  id: string;
 }
 
 // TODO: hve this class take in a database connection
@@ -17,20 +18,20 @@ export class FaceitService {
   faceitApi: FaceitAPI;
   pool: DatabasePoolType;
 
-  constructor(token: string, faceitApi: FaceitAPI) {
+  constructor(token: string, faceitApi: FaceitAPI, pool: DatabasePoolType) {
     this.token = token;
     this.faceitApi = faceitApi;
-    this.pool = createPool(this.token, { ssl: { rejectUnauthorized: false } });
+    this.pool = pool;
   }
 
   async insertElo(player: Player): Promise<QueryResultType<Player>> {
-    const { username, rating, date } = player;
+    const { username, rating, date, id } = player;
 
     return await this.pool.connect(async (connection) => {
       return await connection.query<Player>(
-        sql`INSERT INTO faceit_elos (username, elo, date) VALUES (${username}, ${rating}, ${dateTimeAsTimestamp(
+        sql`INSERT INTO faceit_elos (username, elo, date, id) VALUES (${username}, ${rating}, ${dateTimeAsTimestamp(
           date
-        )})`
+        )}, ${id})`
       );
     });
   }
@@ -44,9 +45,9 @@ export class FaceitService {
     });
   }
 
+  // every x seconds ==== */x * * * * *
+  // every x hours === 0 0 */x * * *
   async pollFaceitElos() {
-    // every x seconds ==== */x * * * * *
-    // every x hours === 0 0 */x * * *
     schedule('0 0 */8 * * *', async () => {
       const playerElos = await this.faceitApi.faceitPlayerElo();
       const insertPlayers = playerElos.map((player) => this.insertElo(player));
