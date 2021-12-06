@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
+    "start": "DATABASE_URL=$(heroku config:get DATABASE_URL -a grinny-bot) node dist/index.js",
     "develop": "DATABASE_URL=$(heroku config:get DATABASE_URL -a grinny-bot) ts-node-dev src/index.ts",
     "pgcli": "pgcli -D grinny-heroku",
     "compile": "tsc --noEmit"
