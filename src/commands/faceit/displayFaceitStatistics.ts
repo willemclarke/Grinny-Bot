@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
-import { faceitApi } from '..';
-import { GRINNY_BOT_ICON } from '../types/constants';
-import { codeblockMsg } from '../utils';
+import { faceitApi } from '../..';
+import { GRINNY_BOT_ICON } from '../../types/constants';
+import { codeblockMsg } from '../../utils';
 
 export const displayFaceitStatistics = async (
   channel: Discord.TextChannel,
@@ -16,12 +16,13 @@ export const displayFaceitStatistics = async (
   const [game, username] = args;
 
   try {
-    const generalStats = await faceitApi.getGeneralStats(game, username);
+    const generalStats = await faceitApi.getGeneralPlayerStats(game, username);
 
     const { player_id, nickname, avatar, games } = generalStats;
     const { skill_level, faceit_elo } = games.csgo;
 
-    const playerStats = await faceitApi.getPlayerStats(player_id, game);
+    const playerStats = await faceitApi.getNarrowPlayerStats(player_id, game);
+
     const discordStatsResponse = new Discord.RichEmbed({
       author: {
         name: 'GrinnyBot',

@@ -3,6 +3,7 @@ import { getStoicQuote } from '../api/stoic';
 import _ from 'lodash';
 import { codeblockMsg } from '../utils';
 import { GRINNY_BOT_ICON } from '../types/constants';
+import { schedule } from 'node-cron';
 
 const philosopherInfo = {
   marcusAurelius: {
@@ -22,7 +23,9 @@ const philosopherInfo = {
   },
 };
 
-export async function displayStoicQuote(channel: Discord.TextChannel) {
+export async function displayStoicQuote(
+  channel: Discord.TextChannel
+): Promise<Discord.Message | Discord.Message[]> {
   try {
     const quote = await getStoicQuote();
     const { text, author } = quote;
@@ -53,14 +56,14 @@ export async function displayStoicQuote(channel: Discord.TextChannel) {
       description: `"${text}" - [**${author}**](${matchingData(author).link})`,
     });
 
-    await channel.send(discordQuoteResponse);
+    return await channel.send(discordQuoteResponse);
   } catch (err) {
-    await channel.send(codeblockMsg(`${err}`));
+    return await channel.send(codeblockMsg(`${err}`));
   }
 }
 
 export function stoicQuoteInterval(channel: Discord.TextChannel) {
-  setInterval(() => {
+  schedule('0 0 */12 * * *', () => {
     displayStoicQuote(channel);
-  }, 1000 * 60 * 60 * 12);
+  });
 }

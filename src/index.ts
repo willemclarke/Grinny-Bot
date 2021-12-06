@@ -2,8 +2,8 @@ import Discord from 'discord.js';
 import os from 'os';
 import _ from 'lodash';
 import { PIT_CHANNEL_ID, PREFIX, VIP_CHANNEL_ID } from './types/constants';
-import { FaceitAPI } from './api/faceit/faceit';
-import { displayFaceitStatistics } from './commands/faceit';
+import { FaceitAPI } from './api/faceit/faceitApi';
+import { displayFaceitStatistics } from './commands/faceit/displayFaceitStatistics';
 import { FaceitService } from './api/faceit/faceitService';
 import { displayHelpCommands } from './commands/help';
 import { WeatherAPI } from './api/weather';
@@ -18,6 +18,7 @@ import { fromEnv, Config } from './config';
 import { Plotly } from './api/plotly';
 import { retake } from './commands/retake';
 import { codeblockMsg } from './utils';
+import { createPool } from 'slonik';
 
 interface DiscordMessageOverride {
   channel: Discord.TextChannel;
@@ -27,7 +28,6 @@ interface DiscordMessageOverride {
 
 const config: Config = fromEnv();
 const discord = new Discord.Client();
-// const faceitDbService = new FaceitService(config.databaseUrl);
 
 export const faceitApi = new FaceitAPI(config.faceitToken);
 export const weatherApi = new WeatherAPI(config.weatherToken);
@@ -35,16 +35,20 @@ export const nasaApi = new NasaAPI(config.nasaToken);
 export const imdbApi = new IMDBAPI(config.imdbToken);
 export const plotlyApi = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
-discord.once('ready', () => {
+const databasePool = createPool(config.databaseUrl, { ssl: { rejectUnauthorized: false } });
+const faceitDbService = new FaceitService(config.databaseUrl, faceitApi, databasePool);
+
+discord.once('ready', async () => {
   const pitOfSmithChannel = discord.channels.get(PIT_CHANNEL_ID) as Discord.TextChannel;
   const vipChannel = discord.channels.get(VIP_CHANNEL_ID) as Discord.TextChannel;
 
-  stoicQuoteInterval(vipChannel);
-
   console.log('GrinnyBot is ready!');
-  pitOfSmithChannel.send(
+  await pitOfSmithChannel.send(
     codeblockMsg(`Bot has successfully started up on hostname: ${os.hostname}`)
   );
+
+  faceitDbService.pollFaceitElos();
+  stoicQuoteInterval(vipChannel);
 });
 
 discord.on('message', async (message) => {
@@ -73,17 +77,17 @@ discord.on('message', async (message) => {
   } else if (command === 'weather') {
     return await displayWeather(channel, args);
   } else if (command === 'nasa') {
-    return displayAstronomyPic(channel);
+    return await displayAstronomyPic(channel);
   } else if (command === 'imdb') {
-    return displayImdbInfo(channel, args);
+    return await displayImdbInfo(channel, args);
   } else if (command === 'anime') {
-    return displayAnimeInfo(channel, args);
+    return await displayAnimeInfo(channel, args);
   } else if (command === 'manga') {
-    return displayMangaInfo(channel, args);
+    return await displayMangaInfo(channel, args);
   } else if (command === 'stoic') {
-    return displayStoicQuote(channel);
+    return await displayStoicQuote(channel);
   } else if (command === 'retake') {
-    return retake(channel);
+    return await retake(channel);
   }
 });
 
