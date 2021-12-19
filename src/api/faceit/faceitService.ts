@@ -10,8 +10,11 @@ export interface Player {
   id: string;
 }
 
-// TODO: hve this class take in a database connection
-// -- createPool in index.ts and pass into this class. that way we only have 1 pool for whole app.
+interface RawGraphData {
+  windowed_date: number;
+  username: string;
+  max: number;
+}
 
 export class FaceitService {
   token: string;
@@ -44,6 +47,40 @@ export class FaceitService {
       return rows;
     });
   }
+
+  async getElosForGraph(): Promise<readonly RawGraphData[]> {
+    return this.pool.connect(async (connection) => {
+      const { rows } = await connection.query<RawGraphData>(sql`
+      SELECT date_trunc('day', date::date) AS windowed_date, username, MAX(elo)
+      FROM faceit_elos
+      GROUP BY windowed_date, username
+      ORDER BY windowed_date, username`);
+
+      return rows;
+    });
+  }
+
+  transFormGraphData(data: readonly RawGraphData[]) {
+    return data.reduce<Record<string, [{ name: string; elo: number }]>>((acc, datum) => {
+      return {
+        ...acc,
+        [new Date(datum.windowed_date).toDateString()]: [
+          { ...acc, name: datum.username, elo: datum.max },
+        ],
+      };
+    }, {});
+  }
+
+  // {
+  //   "2020-12-11-0000000": [
+  //     { name: "moosbreeder, elo: 2000" },
+  //     { name: "dbousamra, elo: 1500" },
+  //   ],
+  //   "2020-12-12-0000000": [
+  //     { name: "moosbreeder, elo: 2020" },
+  //     { name: "dbousamra, elo: 1520" },
+  //   ]
+  // }
 
   // every x seconds ==== */x * * * * *
   // every x hours === 0 0 */x * * *
