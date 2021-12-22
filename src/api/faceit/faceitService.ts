@@ -1,7 +1,9 @@
-import { createPool, DatabaseConnectionType, DatabasePoolType, QueryResultType, sql } from 'slonik';
+import { DatabasePoolType, QueryResultType, sql } from 'slonik';
 import { FaceitAPI } from './faceitApi';
 import { dateTimeAsTimestamp } from './utils';
 import { schedule } from 'node-cron';
+import _ from 'lodash';
+import { PlotlyData } from '../plotly';
 
 export interface Player {
   username: string;
@@ -61,26 +63,25 @@ export class FaceitService {
   }
 
   transFormGraphData(data: readonly RawGraphData[]) {
-    return data.reduce<Record<string, [{ name: string; elo: number }]>>((acc, datum) => {
-      return {
-        ...acc,
-        [new Date(datum.windowed_date).toDateString()]: [
-          { ...acc, name: datum.username, elo: datum.max },
-        ],
-      };
-    }, {});
+    const transformedData = _.chain(data)
+      .groupBy('username')
+      .mapValues((item) => {
+        return item.reduce<PlotlyData>(
+          (acc, item) => {
+            return {
+              ...acc,
+              x: [...acc.x, new Date(item.windowed_date).toISOString()],
+              y: [...acc.y, item.max],
+              name: item.username,
+            };
+          },
+          { x: [], y: [], type: 'scatter' }
+        );
+      })
+      .values()
+      .value();
+    return transformedData;
   }
-
-  // {
-  //   "2020-12-11-0000000": [
-  //     { name: "moosbreeder, elo: 2000" },
-  //     { name: "dbousamra, elo: 1500" },
-  //   ],
-  //   "2020-12-12-0000000": [
-  //     { name: "moosbreeder, elo: 2020" },
-  //     { name: "dbousamra, elo: 1520" },
-  //   ]
-  // }
 
   // every x seconds ==== */x * * * * *
   // every x hours === 0 0 */x * * *

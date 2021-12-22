@@ -1,68 +1,55 @@
 import Discord from 'discord.js';
 import _ from 'lodash';
 import { GRINNY_BOT_ICON } from '../../types/constants';
-import { codeblockMsg } from '../../utils';
-import QuickChart from 'quickchart-js';
+import { codeblockMsg, randomString } from '../../utils';
 import { faceitDbService } from '../..';
+import { plotlyApi } from '../../index';
 
-export const displayRatingGraph = async (channel: Discord.TextChannel, args: string[]) => {
+export const displayRatingGraph = async (channel: Discord.TextChannel) => {
   const rawData = await faceitDbService.getElosForGraph();
   const parsedData = faceitDbService.transFormGraphData(rawData);
 
-  const chart = new QuickChart();
-  const config = chart
-    .setConfig({
-      type: 'line',
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [93, -29, -17, -8, 73, 98, 40],
-            fill: false,
-          },
-          {
-            label: 'My Second dataset',
-            fill: false,
-            backgroundColor: 'rgb(54, 162, 235)',
-            borderColor: 'rgb(54, 162, 235)',
-            data: [20, 85, -79, 93, 27, -81, -22],
-          },
-          {
-            label: 'My third dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [20, 42, 35, 36, 37, -22, -10],
-            fill: false,
-          },
-          {
-            label: 'My 4th dataset',
-            fill: false,
-            backgroundColor: 'rgb(54, 162, 235)',
-            borderColor: 'rgb(54, 162, 235)',
-            data: [20, 53, 21, -20, 5, 8, 9],
-          },
-        ],
-      },
-    })
-    .setWidth(900)
-    .setHeight(600);
+  const layout = {
+    title: `Faceit Elos`,
+    yaxis: {
+      title: 'Elo',
+    },
+    xaxis: {
+      title: 'Date',
+    },
+    font: {
+      size: 14,
+    },
+  };
+
+  const imgOpts = {
+    format: 'png',
+    width: 1200,
+    height: 667,
+  };
+
+  const fileName = `${randomString(16)}.png`;
+  await plotlyApi.createGraph(parsedData, layout, imgOpts, fileName);
+
   try {
-    const url = await chart.getShortUrl();
     const imageResp = new Discord.RichEmbed({
       author: {
         name: 'GrinnyBot',
         icon_url: GRINNY_BOT_ICON,
       },
+      image: {
+        url: `attachment://${fileName}`,
+      },
       title: `Line Graph of Faceit Elos`,
       color: 0x7289da,
-      image: {
-        url,
-      },
     });
-    return await channel.send(imageResp);
+
+    await channel.send({
+      embed: imageResp,
+      files: [{ attachment: fileName, name: fileName }],
+    });
+
+    plotlyApi.deleteFile(fileName);
   } catch (error) {
     return await channel.send(codeblockMsg(`${error}`));
   }

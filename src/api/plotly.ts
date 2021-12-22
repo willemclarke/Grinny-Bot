@@ -1,10 +1,11 @@
 import plotly from 'plotly';
 import fs from 'fs';
 
-interface PlotlyData {
-  x: number[];
+export interface PlotlyData {
+  x: (number | string | Date)[];
   y: number[];
   type: string;
+  name?: string;
 }
 
 interface PlotlyLayout {
@@ -36,14 +37,14 @@ export class Plotly {
   }
 
   createGraph(
-    data: PlotlyData,
+    data: PlotlyData[],
     layout: PlotlyLayout,
     imgOpts: PlotlyImageOptions,
     fileName: string
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-        const figure = { data: [data], layout };
+        const figure = { data, layout };
 
         this.plotly.getImage(figure, imgOpts, (error: any, imageStream: fs.ReadStream) => {
           if (error) {

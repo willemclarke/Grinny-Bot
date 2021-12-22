@@ -29,7 +29,7 @@ export const run = (command: Command, channel: Discord.TextChannel, args: string
     case 'stats':
       return displayFaceitStatistics(channel, args);
     case 'graph':
-      return displayRatingGraph(channel, args);
+      return displayRatingGraph(channel);
     case 'weather':
       return displayWeather(channel, args);
     case 'nasa':
