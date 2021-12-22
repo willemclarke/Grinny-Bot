@@ -58,7 +58,7 @@ export const displayAnimeInfo = async (
     };
 
     const fileName = `${randomString(16)}.png`;
-    await plotlyApi.createGraph(data, layout, imgOpts, fileName);
+    await plotlyApi.createGraph([data], layout, imgOpts, fileName);
 
     const discordAnimeResponse = new Discord.RichEmbed({
       color: 0x7289da,
@@ -173,7 +173,7 @@ export const displayMangaInfo = async (
     };
 
     const fileName = `${randomString(16)}.png`;
-    await plotlyApi.createGraph(data, layout, imgOpts, fileName);
+    await plotlyApi.createGraph([data], layout, imgOpts, fileName);
 
     const discordMangaResponse = new Discord.RichEmbed({
       color: 0x7289da,

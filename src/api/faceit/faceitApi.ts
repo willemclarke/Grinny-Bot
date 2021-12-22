@@ -87,6 +87,7 @@ export class FaceitAPI {
       this.getFaceitPlayer('f613a6d8-9ddb-419d-9f22-66ad38c43f3c'), // bass
       this.getFaceitPlayer('f341d26d-9f2d-4e5d-a013-22d461572208'), // richie
       this.getFaceitPlayer('802f15e7-da6c-4ce9-82ab-e9e7e877bd76'), // dbou
+      this.getFaceitPlayer('d41a45b5-35c7-46e4-b18c-74d7c5877a22'), // ben
     ];
 
     try {

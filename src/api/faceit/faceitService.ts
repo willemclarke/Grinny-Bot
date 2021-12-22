@@ -1,7 +1,9 @@
-import { createPool, DatabaseConnectionType, DatabasePoolType, QueryResultType, sql } from 'slonik';
+import { DatabasePoolType, QueryResultType, sql } from 'slonik';
 import { FaceitAPI } from './faceitApi';
 import { dateTimeAsTimestamp } from './utils';
 import { schedule } from 'node-cron';
+import _ from 'lodash';
+import { PlotlyData } from '../plotly';
 
 export interface Player {
   username: string;
@@ -10,8 +12,11 @@ export interface Player {
   id: string;
 }
 
-// TODO: hve this class take in a database connection
-// -- createPool in index.ts and pass into this class. that way we only have 1 pool for whole app.
+interface RawGraphData {
+  windowed_date: number;
+  username: string;
+  max: number;
+}
 
 export class FaceitService {
   token: string;
@@ -43,6 +48,39 @@ export class FaceitService {
       );
       return rows;
     });
+  }
+
+  async getElosForGraph(): Promise<readonly RawGraphData[]> {
+    return this.pool.connect(async (connection) => {
+      const { rows } = await connection.query<RawGraphData>(sql`
+      SELECT date_trunc('day', date::date) AS windowed_date, username, MAX(elo)
+      FROM faceit_elos
+      GROUP BY windowed_date, username
+      ORDER BY windowed_date, username`);
+
+      return rows;
+    });
+  }
+
+  transFormGraphData(data: readonly RawGraphData[]) {
+    const transformedData = _.chain(data)
+      .groupBy('username')
+      .mapValues((item) => {
+        return item.reduce<PlotlyData>(
+          (acc, item) => {
+            return {
+              ...acc,
+              x: [...acc.x, new Date(item.windowed_date).toISOString()],
+              y: [...acc.y, item.max],
+              name: item.username,
+            };
+          },
+          { x: [], y: [], type: 'scatter' }
+        );
+      })
+      .values()
+      .value();
+    return transformedData;
   }
 
   // every x seconds ==== */x * * * * *

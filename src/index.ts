@@ -3,22 +3,16 @@ import os from 'os';
 import _ from 'lodash';
 import { PIT_CHANNEL_ID, PREFIX, VIP_CHANNEL_ID } from './types/constants';
 import { FaceitAPI } from './api/faceit/faceitApi';
-import { displayFaceitStatistics } from './commands/faceit/displayFaceitStatistics';
 import { FaceitService } from './api/faceit/faceitService';
-import { displayHelpCommands } from './commands/help';
 import { WeatherAPI } from './api/weather';
-import { displayWeather } from './commands/weather';
 import { NasaAPI } from './api/nasa';
-import { displayAstronomyPic } from './commands/nasa';
 import { IMDBAPI } from './api/imdb';
-import { displayImdbInfo } from './commands/imdb';
-import { displayAnimeInfo, displayMangaInfo } from './commands/myanimelist';
-import { displayStoicQuote, stoicQuoteInterval } from './commands/stoic';
+import { stoicQuoteInterval } from './commands/stoic';
 import { fromEnv, Config } from './config';
 import { Plotly } from './api/plotly';
-import { retake } from './commands/retake';
 import { codeblockMsg } from './utils';
 import { createPool } from 'slonik';
+import { run, Command } from './run';
 
 interface DiscordMessageOverride {
   channel: Discord.TextChannel;
@@ -36,7 +30,7 @@ export const imdbApi = new IMDBAPI(config.imdbToken);
 export const plotlyApi = new Plotly(config.plotlyUsername, config.plotlyToken, config.plotlyHost);
 
 const databasePool = createPool(config.databaseUrl, { ssl: { rejectUnauthorized: false } });
-const faceitDbService = new FaceitService(config.databaseUrl, faceitApi, databasePool);
+export const faceitDbService = new FaceitService(config.databaseUrl, faceitApi, databasePool);
 
 discord.once('ready', async () => {
   const pitOfSmithChannel = discord.channels.get(PIT_CHANNEL_ID) as Discord.TextChannel;
@@ -66,29 +60,11 @@ discord.on('message', async (message) => {
 
   const command: string | undefined = args?.shift()?.toLowerCase();
 
-  if (!command) {
+  if (_.isUndefined(command)) {
     return channel.send('Not a valid command!');
   }
 
-  if (command === 'help') {
-    return await displayHelpCommands(channel);
-  } else if (command === 'stats') {
-    return await displayFaceitStatistics(channel, args);
-  } else if (command === 'weather') {
-    return await displayWeather(channel, args);
-  } else if (command === 'nasa') {
-    return await displayAstronomyPic(channel);
-  } else if (command === 'imdb') {
-    return await displayImdbInfo(channel, args);
-  } else if (command === 'anime') {
-    return await displayAnimeInfo(channel, args);
-  } else if (command === 'manga') {
-    return await displayMangaInfo(channel, args);
-  } else if (command === 'stoic') {
-    return await displayStoicQuote(channel);
-  } else if (command === 'retake') {
-    return await retake(channel);
-  }
+  run(command as Command, channel, args);
 });
 
 discord.login(config.discordToken);
