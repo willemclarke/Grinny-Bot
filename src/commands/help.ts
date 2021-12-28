@@ -18,6 +18,14 @@ export const displayHelpCommands = async (
         value: 'Faceit Statistics Command: requires <!stats csgo Faceit_Name>',
       },
       {
+        name: '**!graph**',
+        value: 'Displays line graph of faceit elos, with elos being polled every 8 hours per day',
+      },
+      {
+        name: '**!graph force**',
+        value: 'Displays line graph of faceit elos, writing to the db on request.',
+      },
+      {
         name: '**!weather**',
         value: `Weather Information Command: requires <!weather City_Name>, Cities such as New York require: <!weather "New York">`,
       },

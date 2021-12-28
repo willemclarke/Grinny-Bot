@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { displayFaceitStatistics } from './commands/faceit/displayFaceitStatistics';
-import { displayRatingGraph } from './commands/faceit/displayRatingGraph';
+import { displayRatingGraph, displayRatingGraphForce } from './commands/faceit/displayRatingGraph';
 import { displayHelpCommands } from './commands/help';
 import { displayImdbInfo } from './commands/imdb';
 import { displayAnimeInfo, displayMangaInfo } from './commands/myanimelist';
@@ -14,6 +14,7 @@ export type Command =
   | 'help'
   | 'stats'
   | 'graph'
+  | 'graph force'
   | 'weather'
   | 'nasa'
   | 'imdb'
@@ -30,6 +31,8 @@ export const run = (command: Command, channel: Discord.TextChannel, args: string
       return displayFaceitStatistics(channel, args);
     case 'graph':
       return displayRatingGraph(channel);
+    case 'graph force':
+      return displayRatingGraphForce(channel);
     case 'weather':
       return displayWeather(channel, args);
     case 'nasa':

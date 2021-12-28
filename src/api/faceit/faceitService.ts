@@ -94,4 +94,12 @@ export class FaceitService {
       return insertPlayers;
     });
   }
+
+  async writePlayerElos() {
+    const playerElos = await this.faceitApi.faceitPlayerElo();
+    const insertPlayers = playerElos.map((player) => this.insertElo(player));
+    console.log(`Writing ${JSON.stringify(playerElos, null, 2)} to database`);
+
+    return insertPlayers;
+  }
 }
