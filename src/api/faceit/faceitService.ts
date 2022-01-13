@@ -1,7 +1,7 @@
 import { DatabasePoolType, QueryResultType, sql } from 'slonik';
 import { FaceitAPI } from './faceitApi';
 import { dateTimeAsTimestamp } from './utils';
-import { schedule } from 'node-cron';
+import { schedule, ScheduledTask } from 'node-cron';
 import _ from 'lodash';
 import { PlotlyData } from '../plotly';
 
@@ -32,8 +32,8 @@ export class FaceitService {
   async insertElo(player: Player): Promise<QueryResultType<Player>> {
     const { username, rating, date, id } = player;
 
-    return await this.pool.connect(async (connection) => {
-      return await connection.query<Player>(
+    return this.pool.connect(async (connection) => {
+      return connection.query<Player>(
         sql`INSERT INTO faceit_elos (username, elo, date, id) VALUES (${username}, ${rating}, ${dateTimeAsTimestamp(
           date
         )}, ${id})`
@@ -62,7 +62,8 @@ export class FaceitService {
     });
   }
 
-  transFormGraphData(data: readonly RawGraphData[]) {
+  transFormGraphData(data: readonly RawGraphData[]): PlotlyData[] {
+    const restPlotlyOptions: Partial<PlotlyData> = { type: 'scatter', mode: 'lines+markers' };
     const transformedData = _.chain(data)
       .groupBy('username')
       .mapValues((item) => {
@@ -75,7 +76,7 @@ export class FaceitService {
               name: item.username,
             };
           },
-          { x: [], y: [], type: 'scatter' }
+          { x: [], y: [], ...restPlotlyOptions }
         );
       })
       .values()
@@ -85,21 +86,15 @@ export class FaceitService {
 
   // every x seconds ==== */x * * * * *
   // every x hours === 0 0 */x * * *
-  async pollFaceitElos() {
-    schedule('0 0 */8 * * *', async () => {
-      const playerElos = await this.faceitApi.faceitPlayerElo();
-      const insertPlayers = playerElos.map((player) => this.insertElo(player));
-      console.log(`Writing ${JSON.stringify(playerElos, null, 2)} to database`);
-
-      return insertPlayers;
+  async pollFaceitElos(): Promise<ScheduledTask> {
+    return schedule('0 0 */8 * * *', async () => {
+      await this.writePlayerElos();
     });
   }
 
   async writePlayerElos() {
     const playerElos = await this.faceitApi.faceitPlayerElo();
-    const insertPlayers = playerElos.map((player) => this.insertElo(player));
     console.log(`Writing ${JSON.stringify(playerElos, null, 2)} to database`);
-
-    return insertPlayers;
+    return Promise.all(playerElos.map((player) => this.insertElo(player)));
   }
 }

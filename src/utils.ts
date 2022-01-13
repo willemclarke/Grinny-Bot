@@ -8,7 +8,7 @@ export const codeblockMsg = (message: string): string => {
   return _.upperFirst(`\`\`\`${message}\`\`\``);
 };
 
-export function formatDiscordMessage(object: object): string {
+export function formatDiscordMessage(object: Record<string, unknown>): string {
   return _.reduce(
     object,
     (acc: string[], value, key) => _.concat(acc, `${key}: ${value}`),

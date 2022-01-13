@@ -4,7 +4,8 @@ import fs from 'fs';
 export interface PlotlyData {
   x: (number | string | Date)[];
   y: number[];
-  type: string;
+  type?: string;
+  mode?: string;
   name?: string;
 }
 

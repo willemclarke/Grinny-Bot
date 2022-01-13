@@ -26,12 +26,19 @@ const imgOpts = {
 
 const fileName = `${randomString(16)}.png`;
 
-export const displayRatingGraph = async (channel: Discord.TextChannel) => {
-  const rawData = await faceitDbService.getElosForGraph();
-  const transformedData = faceitDbService.transFormGraphData(rawData);
-  await plotlyApi.createGraph(transformedData, layout, imgOpts, fileName);
-
+export const displayRatingGraph = async (
+  channel: Discord.TextChannel,
+  args: string[]
+): Promise<Discord.Message | Discord.Message[] | undefined> => {
   try {
+    if (_.includes(args, 'force')) {
+      await faceitDbService.writePlayerElos();
+    }
+
+    const rawData = await faceitDbService.getElosForGraph();
+    const transformedData = faceitDbService.transFormGraphData(rawData);
+    await plotlyApi.createGraph(transformedData, layout, imgOpts, fileName);
+
     const imageResp = new Discord.RichEmbed({
       author: {
         name: 'GrinnyBot',
@@ -51,35 +58,7 @@ export const displayRatingGraph = async (channel: Discord.TextChannel) => {
 
     plotlyApi.deleteFile(fileName);
   } catch (error) {
-    return await channel.send(codeblockMsg(`${error}`));
-  }
-};
-
-export const displayRatingGraphForce = async (channel: Discord.TextChannel) => {
-  await faceitDbService.writePlayerElos();
-  const rawData = await faceitDbService.getElosForGraph();
-
-  const transformedData = faceitDbService.transFormGraphData(rawData);
-  await plotlyApi.createGraph(transformedData, layout, imgOpts, fileName);
-
-  try {
-    const imageResp = new Discord.RichEmbed({
-      author: {
-        name: 'GrinnyBot',
-        icon_url: GRINNY_BOT_ICON,
-      },
-      image: {
-        url: `attachment://${fileName}`,
-      },
-      title: `Line Graph of Faceit Elos`,
-      color: 0x7289da,
-    });
-
-    await channel.send({
-      embed: imageResp,
-      files: [{ attachment: fileName, name: fileName }],
-    });
-  } catch (error) {
+    console.log(error);
     return await channel.send(codeblockMsg(`${error}`));
   }
 };
