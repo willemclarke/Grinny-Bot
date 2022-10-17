@@ -45,8 +45,6 @@ export const run = (command: Command, channel: Discord.TextChannel, args: string
     case 'retake':
       return retake(channel);
     default:
-      return channel.send(
-        codeblockMsg('Invalid command, to see list of valid commands type !help')
-      );
+      return;
   }
 };
